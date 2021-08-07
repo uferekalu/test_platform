@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { retrieveQuestions, deleteAllQuestions } from "../actions/questions";
+import { Container, Row, Col, Button, Badge, ListGroup } from 'react-bootstrap';
 
 class QuestionsList extends Component {
   constructor(props) {
@@ -11,8 +12,10 @@ class QuestionsList extends Component {
     this.removeAllQuestions = this.removeAllQuestions.bind(this);
 
     this.state = {
-      currentQuestion: null,
-      currentIndex: -1
+      currentQuestion: 0,
+      currentIndex: -1,
+      showScore: false,
+      score: 0
     };
   }
 
@@ -25,6 +28,14 @@ class QuestionsList extends Component {
       currentQuestion: null,
       currentIndex: -1,
     });
+  }
+
+  handleAnswerOptionClick (isCorrect) {
+    if (isCorrect){
+      this.setState({
+        score: this.state.score + 1
+      })
+    }
   }
 
   setActiveQuestion(question, index) {
@@ -47,69 +58,53 @@ class QuestionsList extends Component {
   }
 
   render() {
-    const { currentQuestion, currentIndex } = this.state;
+    const { currentQuestion, currentIndex, showScore, score } = this.state;
     const { questions } = this.props;
+    const que = questions.map((ques) => ques)
+    console.log("this the question", que)
 
     return (
-      <div className="list row">
-        <div className="col-md-8">
-        </div>
-        <div className="col-md-6">
-          <h4>Questions lists</h4>
-          <ul className="list-group">
-            {questions &&
-              questions.map((question, index) => (
-                <li
-                  className={
-                    "list-group-item " +
-                    (index === currentIndex ? "active" : "")
-                  }
-                  onClick={() => this.setActiveQuestion(question, index)}
-                  key={index}
-                >
-                  {question.description}
-                </li>
-              ))}
-          </ul>
-
-          <button
-            className="m-3 btn btn-sm btn-danger"
-            onClick={this.deleteAllQuestions}
-          >
-            Remove All
-          </button>
-        </div>
-        <div className="col-md-6">
-          {currentQuestion ? (
-            <div>
-              <h4>Question</h4>
-              <div>
-                <label>
-                  <strong>Description:</strong>
-                </label>{" "}
-                {currentQuestion.description}
-              </div>
-              <div>
-                <label>
-                  <strong>Description:</strong>
-                </label>{" "}
-                {currentQuestion.alternatives}
-              </div>
-              <Link
-                to={"/questions/" + currentQuestion.id}
-                className="badge badge-warning"
-              >
-                Edit
-              </Link>
-            </div>
-          ) : (
-            <div>
-              <br />
-              <p>Please click on a Question...</p>
-            </div>
-          )}
-        </div>
-      </div>
+      <>
+      <Row className="justify-content-md-center">
+        <Col md="auto">
+          <h4>Instruction: Choose an answer to move to the next question!</h4>
+        </Col>
+      </Row>
+        <Container>
+            {showScore ? (
+              <Button variant="primary">
+                You scored <Badge bg="secondary">{score}</Badge> out of <Badge bg="secondary">{questions.length}</Badge>
+                <span className="visually-hidden">unread messages</span>
+              </Button>
+              ) : (
+                  <>
+                  <Row className="mb-3">
+                    <Col>
+                        <Button variant="primary"><span>There are {questions.length} questions</span> </Button>
+                    </Col>
+                  </Row>
+                  <Row>
+                    {questions && questions.map((question, index) => (
+                    <>
+                      <Col><span>No. {index+1}: {' '}</span>{question.description}
+                
+                    
+                          {question.alternatives.map((answerOption) => (
+                            <ListGroup>
+                              <ListGroup.Item onClick={() => this.handleAnswerOptionClick(answerOption.isCorrect)}>
+                                {answerOption.text}
+                              </ListGroup.Item>
+                            </ListGroup>
+                          ))}
+                      </Col>
+                  </>
+                    ))}
+                  </Row>
+                </>
+              )
+            }
+      </Container>
+      </>
     );
   }
 }

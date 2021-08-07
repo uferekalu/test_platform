@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { createQuestion } from "../actions/questions";
+import { Row, Col, Form, FloatingLabel, Button } from 'react-bootstrap';
 
 class AddQuestion extends Component {
   constructor(props) {
@@ -58,7 +59,13 @@ class AddQuestion extends Component {
 
   render() {
     return (
-      <div className="submit-form">
+      <>
+      <Row className="justify-content-md-center">
+        <Col xs="auto">
+          <h4>Add a Question</h4>
+        </Col>
+      </Row>
+      <Row className="justify-content-md-center">
         {this.state.submitted ? (
           <div>
             <h4>You submitted successfully!</h4>
@@ -67,112 +74,41 @@ class AddQuestion extends Component {
             </button>
           </div>
         ) : (
-          <div>
-              <div className="container auto">
-                  <div className="row">
-                        <div className="col-8">
-                    <div className="form-group">
-                    <label htmlFor="description">Description</label>
-                    <input
-                        type="text"
-                        className="form-control"
-                        id="description"
-                        required
-                        value={this.state.description}
-                        onChange={this.onChangeDescription}
-                        name="description"
-                    />
-                    </div>
-
-                    <div className="form-group">
-                    <label htmlFor="alternatives">Option 1</label>
-                    <label>
-                        <input
-                        type="checkbox"
-                        name="hooks"
-                        checked={this.state.isCorrect}
-                        onChange={this.handleChange}
-                        />
-                    </label>
-                    <input
-                        type="text"
-                        className="form-control"
-                        id="inputA"
-                        required
-                        value={this.state.inputA}
-                        onChange={this.onChangeAlternatives}
-                        name="inputA"
-                    />
-                    </div>
-                    <div className="form-group">
-                    <label htmlFor="alternatives">Option 2</label>
-                    <input
-                        type="text"
-                        className="form-control"
-                        id="inputB"
-                        required
-                        value={this.state.inputB}
-                        onChange={this.onChangeAlternatives}
-                        name="inputB"
-                    />
-                    <label>
-                        <input
-                        type="checkbox"
-                        name="hooks"
-                        checked={this.state.isCorrect}
-                        onChange={this.handleChange}
-                        />
-                    </label>
-                    </div>
-                    <div className="form-group">
-                    <label htmlFor="alternatives">Option 3</label>
-                    <input
-                        type="text"
-                        className="form-control"
-                        id="inputC"
-                        required
-                        value={this.state.inputC}
-                        onChange={this.onChangeAlternatives}
-                        name="inputC"
-                    />
-                    <label>
-                        <input
-                        type="checkbox"
-                        name="hooks"
-                        checked={this.state.isCorrect}
-                        onChange={this.handleChange}
-                        />
-                    </label>
-                    </div>
-                    <div className="form-group">
-                    <label htmlFor="alternatives">Option 4</label>
-                    <input
-                        type="text"
-                        className="form-control"
-                        id="inputD"
-                        required
-                        value={this.state.inputD}
-                        onChange={this.onChangeAlternatives}
-                        name="inputD"
-                    />
-                    <label>
-                        <input
-                        type="checkbox"
-                        name="hooks"
-                        checked={this.state.isCorrect}
-                        onChange={this.handleChange}
-                        />
-                    </label>
-                    </div>
-                    <button onClick={this.saveQuestion} className="btn btn-success">
-                    Submit
-                    </button>
-                </div>
-            </div>
-        </div>
-        </div>
+          <>
+          <Form>
+            <Row className="g-2">
+                <Col md>
+                  <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                      <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
+                        <Form.Label>Question</Form.Label>
+                        <Form.Control as="textarea" placeholder="Enter question" rows={15} />
+                      </Form.Group>
+                    </Form.Group>
+                </Col>
+                <Col md>
+                  <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
+                    <Form.Label>Answer options with a checkbox for correct answer</Form.Label>
+                      <Form.Check type="checkbox" label="Check for correct answer" />
+                      <Form.Control className="mb-3"  placeholder="Enter answer option 1" />
+                      <Form.Check type="checkbox" label="Check for correct answer" />
+                      <Form.Control className="mb-3"  placeholder="Enter answer option 2" />
+                      <Form.Check type="checkbox" label="Check for correct answer" />
+                      <Form.Control className="mb-3"  placeholder="Enter answer option 3" />
+                      <Form.Check type="checkbox" label="Check for correct answer" />
+                      <Form.Control className="mb-3"  placeholder="Enter answer option 4" />
+                      <Form.Check type="checkbox" label="Check for correct answer" />
+                      <Form.Control className="mb-3"  placeholder="Enter answer option 5" />
+                  </Form.Group>
+                </Col>
+              </Row>
+                  <div className="d-grid gap-2">
+                    <Button variant="outline-primary">Submit</Button>
+                  </div>
+          </Form>
+          </>
         )}
-      </div>
+      </Row>
+    </>
     );
   }
 }
