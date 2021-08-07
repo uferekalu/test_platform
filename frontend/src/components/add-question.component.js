@@ -81,7 +81,7 @@ class AddQuestion extends Component {
                   <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                       <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
                         <Form.Label>Question</Form.Label>
-                        <Form.Control as="textarea" placeholder="Enter question" rows={3} />
+                        <Form.Control as="textarea" placeholder="Enter question" rows={15} />
                       </Form.Group>
                     </Form.Group>
                 </Col>
