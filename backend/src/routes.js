@@ -78,9 +78,9 @@ router.delete('/questions/:id', async (req, res) => {
         const question = await Question.deleteOne({_id})
 
         if(question.deletedCount === 0){
-            return res.status(404).json()
+            return res.status(404).json({status: "failed"})
         }else{
-            return res.status(204).json()
+            return res.status(204).json({status: "success"})
         }
     } catch (error) {
         return res.status(500).json({"error":error})
