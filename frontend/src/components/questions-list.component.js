@@ -86,7 +86,7 @@ class QuestionsList extends Component {
                   <Row>
                     {questions && questions.map((question, index) => (
                     <>
-                      <Col><span>No. {index+1}:</span>{question.description}
+                      <Col><span>No. {index+1}: {' '}</span>{question.description}
                 
                     
                           {question.alternatives.map((answerOption) => (
