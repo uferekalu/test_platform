@@ -42,7 +42,7 @@ class App extends Component {
   render() {
     return (
       <Router>
-        <nav className="navbar navbar-expand navbar-dark bg-dark">
+        <nav className="navbar px-5 navbar-expand navbar-dark bg-dark">
           <Link to={"/"} className="navbar-brand">
             Exam Platform
           </Link>

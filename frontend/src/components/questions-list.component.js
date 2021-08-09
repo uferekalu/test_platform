@@ -2,8 +2,9 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { retrieveQuestions, deleteAllQuestions } from "../actions/questions";
-import { Container, Row, Col, Button, Badge, ListGroup } from 'react-bootstrap';
 import CountDown from './countdown'
+import { Container, Row, Col, Button, Badge, ListGroup, Pagination } from 'react-bootstrap';
+
 
 class QuestionsList extends Component {
   constructor(props) {
@@ -18,11 +19,42 @@ class QuestionsList extends Component {
       showScore: false,
       score: 0,
       active: false,
+      pageSize: 10,
+      total: 0,
+      items: [],
     };
   }
 
   componentDidMount() {
-    this.props.retrieveQuestions();
+    console.log(this.props)
+    this.props.history.push({
+      search: '?page=1'
+    });
+
+    this.props.retrieveQuestions()
+    .then(() => {
+      // pagination items
+      let items = [];
+      // init pagination
+      // get total pages
+      let total = Math.ceil(this.props.questions.length / 10);
+      for (let number = 1; number <= total; number++) {
+        items.push(
+          <Pagination.Item onClick={() => {
+            this.props.history.push({
+              search: `?page=${number}`
+            });
+          }}
+            active={number === 1}>{number}</Pagination.Item>
+        );
+      }
+      this.setState({
+        items
+      });
+    })
+      .catch(err => {
+        console.error(err.getMessage());
+      });
   }
 
   refreshData() {
@@ -32,8 +64,8 @@ class QuestionsList extends Component {
     });
   }
 
-  handleAnswerOptionClick (isCorrect) {
-    if (isCorrect){
+  handleAnswerOptionClick(isCorrect) {
+    if (isCorrect) {
       this.setState({
         score: this.state.score + 1
       })
@@ -60,57 +92,84 @@ class QuestionsList extends Component {
   }
 
   render() {
-    const { currentQuestion, currentIndex, showScore, score } = this.state;
+    const { currentQuestion, currentIndex, showScore, score, pageSize } = this.state;
+    // get query from url
+    const search = this.props.location.search;
+    const page = new URLSearchParams(search).get("page");
+
     const { questions } = this.props;
     const hoursMinsSecs = {hours:1, minutes:20, seconds: 40}
 
     return (
-      <>
-      <Row className="justify-content-md-center">
-        <Col md="auto mb-4">
-          <h4>Instruction: Choose an answer to move to the next question!</h4>
-        </Col>
-      </Row>
+      <div>
+        <Row className="justify-content-md-center">
+          <Col md="auto mb-4">
+            <h4>Instruction: Choose an answer to move to the next question!</h4>
+          </Col>
+        </Row>
         <Container>
-            {showScore ? (
-              <Button variant="primary">
-                You scored <Badge bg="secondary">{score}</Badge> out of <Badge bg="secondary">{questions.length}</Badge>
-                <span className="visually-hidden">unread messages</span>
-              </Button>
-              ) : (
-                  <>
-                  <Row className="mb-3">
-                    <Col>
-                        <Button variant="primary"><span>There are {questions.length} questions</span> </Button>
-                    </Col>
-                    <Col></Col><Col></Col>
-                    <Col>
-                        <Button variant="primary"><span><CountDown hoursMinsSecs={hoursMinsSecs} /> </span> </Button>
-                    </Col>
-                  </Row>
-                  <Row>
-                    {questions && questions.map((question, index) => (
-                    <>
-                      <Col key={index}><span>No. {index+1}: {' '}</span>{question.description}
-                
-                    
-                          {question.alternatives.map((answerOption, index) => (
-                            <ListGroup className="options" key={index}>
-                              <ListGroup.Item onClick={() => this.handleAnswerOptionClick(answerOption.isCorrect)}>
-                                {answerOption.text}
-                              </ListGroup.Item>
-                            </ListGroup>
-                          ))}
-                      </Col>
-                  </>
+        {showScore ? (
+            <Button variant="primary">
+              You scored <Badge bg="secondary">{score}</Badge> out of <Badge bg="secondary">{questions.length}</Badge>
+              <span className="visually-hidden">unread messages</span>
+            </Button>
+          ) : (
+          <>
+            <Row className="mb-3">
+              <Col>
+                <Button variant="primary"><span>There are {questions.length} questions</span> </Button>
+              </Col>
+              <Col></Col><Col></Col>
+                <Col>
+                    <Button variant="primary"><span><CountDown hoursMinsSecs={hoursMinsSecs} /> </span> </Button>
+                </Col>
+            </Row>
+            <Row>
+              {questions && questions.map((question, index) => (
+                <>
+                <Col><span>No. {index + 1}: {' '}</span>{question.description}
+                    {question.alternatives.slice(
+                      pageSize * (page - 1),
+                      pageSize * (page - 1) + pageSize
+                    ).map((answerOption) => (
+                      <ListGroup>
+                        <ListGroup.Item onClick={() => this.handleAnswerOptionClick(answerOption.isCorrect)}>
+                          {answerOption.text}
+                        </ListGroup.Item>
+                      </ListGroup>
                     ))}
-                  </Row>
+                </Col>
+                
                 </>
-              )
-            }
-      </Container>
-      </>
-    );
+              ))}
+            </Row>
+            {/* <Row>
+              {questions && questions.map((question, index) => (
+                <Col key={index}><span>No. {index+1}: {' '}</span>{question.description}
+                    {question.alternatives.map((answerOption, index) => (
+                      <ListGroup className="options" key={index}>
+                        <ListGroup.Item onClick={() => this.handleAnswerOptionClick(answerOption.isCorrect)}>
+                          {answerOption.text}
+                        </ListGroup.Item>
+                      </ListGroup>
+                    ))}
+                </Col>
+              ))}
+            </Row> */}
+          </>
+          )}
+          <div className="mt-5 d-flex justify-content-center">
+          <Pagination bsSize="medium">
+            <Pagination.First />
+            <Pagination.Prev />
+            {this.state.items}
+            <Pagination.Next />
+            <Pagination.Last />
+          </Pagination>
+          </div>
+        </Container>
+      </div>
+    )
   }
 }
 
