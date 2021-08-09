@@ -54,7 +54,6 @@ import {
   export const deleteQuestion = (id) => async (dispatch) => {
     try {
       await QuestionDataService.delete(id);
-  
       dispatch({
         type: DELETE_QUESTION,
         payload: { id },
@@ -91,3 +90,10 @@ import {
       console.log(err);
     }
   };
+
+  export const simpleUpdateQuestion = (payload) => {
+    return {
+      type: UPDATE_QUESTION,
+      payload
+    }
+  }

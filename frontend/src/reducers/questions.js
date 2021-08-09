@@ -20,7 +20,7 @@ import {
   
       case UPDATE_QUESTION:
         return questions.map((question) => {
-          if (question.id === payload.id) {
+          if (question._id === payload._id) {
             return {
               ...question,
               ...payload,
@@ -31,7 +31,7 @@ import {
         });
   
       case DELETE_QUESTION:
-        return questions.filter(({ id }) => id !== payload.id);
+        return questions.filter(({ _id }) => _id !== payload.id);
   
       case DELETE_ALL_QUESTIONS:
         return [];

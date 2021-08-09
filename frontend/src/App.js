@@ -66,6 +66,7 @@ class App extends Component {
             <Route exact path="/tutorials" component={QuestionsList} />
             <Route exact path="/add" component={AddQuestion} />
             <Route path="/tutorials/:id" component={Question} />
+            <Route path="/question/edit/:id" component={AddQuestion} />
             <Route path="/register" component={Register} />
             <Route path="/login" component={Login} />
             <PrivateRoute exact path="/dashboard" component={Dashboard} />
