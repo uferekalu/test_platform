@@ -8,12 +8,12 @@ class AddQuestion extends Component {
     super(props);
     this.onChangeDescription = this.onChangeDescription.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.handleQuestionChange = this.handleQuestionChange.bind(this);
     this.saveQuestion = this.saveQuestion.bind(this);
     this.newQuestion = this.newQuestion.bind(this);
 
     this.state = {
       question: {
-        id: null,
         description: "",
         alternatives: [
           {
@@ -33,7 +33,8 @@ class AddQuestion extends Component {
             "text": ""
           }
         ]
-      }
+      },
+      submitted: false,
     };
   }
 
@@ -47,7 +48,7 @@ class AddQuestion extends Component {
 
   handleChange(e) {
     let question = this.state.question;
-    question.alternatives[e.target.name].isCorrect = e.target.value;
+    question.alternatives[e.target.name].isCorrect = e.target.checked;
     this.setState({
       question,
     });
@@ -61,16 +62,15 @@ class AddQuestion extends Component {
     });
   }
 
-  saveQuestion() {
-    const { description, alternatives } = this.state;
+  saveQuestion(e) {
+    const { question } = this.state;
 
+    e.preventDefault()
     this.props
-      .createQuestion(description, alternatives)
+      .createQuestion(question.description, question.alternatives)
       .then((data) => {
         this.setState({
-          id: data._id,
-          description: data.description,
-          alternatives: data.alternatives,
+          // question: newQuestion,
           submitted: true,
         });
         console.log(data);
@@ -82,10 +82,27 @@ class AddQuestion extends Component {
 
   newQuestion() {
     this.setState({
-      id: null,
-      description: "",
-      alternatives: [],
-
+      question: {
+        description: "",
+        alternatives: [
+          {
+            "isCorrect": false,
+            "text": ""
+          },
+          {
+            "isCorrect": false,
+            "text": ""
+          },
+          {
+            "isCorrect": false,
+            "text": ""
+          },
+          {
+            "isCorrect": false,
+            "text": ""
+          }
+        ]
+      },
       submitted: false,
     });
   }
@@ -110,7 +127,7 @@ class AddQuestion extends Component {
             </div>
           ) : (
             <>
-              <Form>
+              <Form onSubmit={this.saveQuestion}>
                 <Row className="g-2">
                   <Col md>
                     <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
@@ -127,7 +144,7 @@ class AddQuestion extends Component {
                         name="0"
                         onChange={this.handleChange}
                         type="checkbox"
-                        value={question.alternatives[0].text}
+                        checked={question.alternatives[0].isCorrect}
                         label="Check for correct answer" />
                       <Form.Control id="title"
                         name="0"                 
@@ -136,6 +153,7 @@ class AddQuestion extends Component {
                       <Form.Check
                         name="1"
                         onChange={this.handleChange}
+                        checked={question.alternatives[1].isCorrect}
                         type="checkbox" label="Check for correct answer" />
                       <Form.Control id="title"
                         name="1"                 
@@ -145,6 +163,7 @@ class AddQuestion extends Component {
                       <Form.Check
                         name="2"
                         onChange={this.handleChange}
+                        checked={question.alternatives[2].isCorrect}
                         type="checkbox" label="Check for correct answer" />
                       <Form.Control id="title"
                         name="2"                 
@@ -154,6 +173,7 @@ class AddQuestion extends Component {
                       <Form.Check
                         name="3"
                         onChange={this.handleChange}
+                        checked={question.alternatives[3].isCorrect}
                         type="checkbox" label="Check for correct answer" />
                       <Form.Control id="title"
                         name="3"                 
@@ -164,7 +184,7 @@ class AddQuestion extends Component {
                   </Col>
                 </Row>
                 <div className="d-grid gap-2">
-                  <Button variant="outline-primary">Submit</Button>
+                  <Button type="submit" variant="outline-primary">Submit</Button>
                 </div>
               </Form>
             </>
