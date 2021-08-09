@@ -2,7 +2,9 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { retrieveQuestions, deleteAllQuestions } from "../actions/questions";
+import CountDown from './countdown'
 import { Container, Row, Col, Button, Badge, ListGroup, Pagination } from 'react-bootstrap';
+
 
 class QuestionsList extends Component {
   constructor(props) {
@@ -16,6 +18,7 @@ class QuestionsList extends Component {
       currentIndex: -1,
       showScore: false,
       score: 0,
+      active: false,
       pageSize: 10,
       total: 0,
       items: [],
@@ -95,52 +98,66 @@ class QuestionsList extends Component {
     const page = new URLSearchParams(search).get("page");
 
     const { questions } = this.props;
-    const que = questions.map((ques) => ques)
-    // console.log("this the question", que)
+    const hoursMinsSecs = {hours:1, minutes:20, seconds: 40}
 
     return (
-      <>
+      <div>
         <Row className="justify-content-md-center">
-          <Col md="auto">
+          <Col md="auto mb-4">
             <h4>Instruction: Choose an answer to move to the next question!</h4>
           </Col>
         </Row>
         <Container>
-          {showScore ? (
+        {showScore ? (
             <Button variant="primary">
               You scored <Badge bg="secondary">{score}</Badge> out of <Badge bg="secondary">{questions.length}</Badge>
               <span className="visually-hidden">unread messages</span>
             </Button>
           ) : (
-            <>
-              <Row className="mb-3">
+          <>
+            <Row className="mb-3">
+              <Col>
+                <Button variant="primary"><span>There are {questions.length} questions</span> </Button>
+              </Col>
+              <Col></Col><Col></Col>
                 <Col>
-                  <Button variant="primary"><span>There are {questions.length} questions</span> </Button>
+                    <Button variant="primary"><span><CountDown hoursMinsSecs={hoursMinsSecs} /> </span> </Button>
                 </Col>
-              </Row>
-              <Row>
-                {questions && questions.map((question, index) => (
-                  <>
-                    <Col><span>No. {index + 1}: {' '}</span>{question.description}
-
-
-                      {question.alternatives.slice(
-                        pageSize * (page - 1),
-                        pageSize * (page - 1) + pageSize
-                      ).map((answerOption) => (
-                        <ListGroup>
-                          <ListGroup.Item onClick={() => this.handleAnswerOptionClick(answerOption.isCorrect)}>
-                            {answerOption.text}
-                          </ListGroup.Item>
-                        </ListGroup>
-                      ))}
-                    </Col>
-                  </>
-                ))}
-              </Row>
-            </>
-          )
-          }
+            </Row>
+            <Row>
+              {questions && questions.map((question, index) => (
+                <>
+                <Col><span>No. {index + 1}: {' '}</span>{question.description}
+                    {question.alternatives.slice(
+                      pageSize * (page - 1),
+                      pageSize * (page - 1) + pageSize
+                    ).map((answerOption) => (
+                      <ListGroup>
+                        <ListGroup.Item onClick={() => this.handleAnswerOptionClick(answerOption.isCorrect)}>
+                          {answerOption.text}
+                        </ListGroup.Item>
+                      </ListGroup>
+                    ))}
+                </Col>
+                
+                </>
+              ))}
+            </Row>
+            {/* <Row>
+              {questions && questions.map((question, index) => (
+                <Col key={index}><span>No. {index+1}: {' '}</span>{question.description}
+                    {question.alternatives.map((answerOption, index) => (
+                      <ListGroup className="options" key={index}>
+                        <ListGroup.Item onClick={() => this.handleAnswerOptionClick(answerOption.isCorrect)}>
+                          {answerOption.text}
+                        </ListGroup.Item>
+                      </ListGroup>
+                    ))}
+                </Col>
+              ))}
+            </Row> */}
+          </>
+          )}
           <div className="mt-5 d-flex justify-content-center">
           <Pagination bsSize="medium">
             <Pagination.First />
@@ -151,8 +168,8 @@ class QuestionsList extends Component {
           </Pagination>
           </div>
         </Container>
-      </>
-    );
+      </div>
+    )
   }
 }
 
