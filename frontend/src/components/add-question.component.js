@@ -108,7 +108,7 @@ class AddQuestion extends Component {
         });
     else
       this.props
-        .updateQuestion( this.props.match.params.id, {description : question.description, alternatives : question.alternatives})
+        .updateQuestion(this.props.match.params.id, { description: question.description, alternatives: question.alternatives })
         .then((data) => {
           this.setState({
             // question: newQuestion,
@@ -159,7 +159,7 @@ class AddQuestion extends Component {
       <>
         <Row className="justify-content-md-center">
           <Col xs="auto">
-            <h4>Add a Question</h4>
+            <h4>{!this.props.history.location.pathname.includes("edit") ? "Add a Question" : "Edit Question"}</h4>
           </Col>
         </Row>
         <Row className="justify-content-md-center">
