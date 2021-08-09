@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { createQuestion } from "../actions/questions";
+import { createQuestion, updateQuestion } from "../actions/questions";
 import { Row, Col, Form, FloatingLabel, Button } from 'react-bootstrap';
 import QuestionDataService from "../services/question-service";
 
@@ -44,7 +44,7 @@ class AddQuestion extends Component {
   }
 
   componentDidMount() {
-    if(this.props.history.location.pathname.includes("edit"))
+    if (this.props.history.location.pathname.includes("edit"))
       this.getQuestion(this.props.match.params.id);
   }
 
@@ -92,19 +92,33 @@ class AddQuestion extends Component {
   saveQuestion(e) {
     const { question } = this.state;
 
-    e.preventDefault()
-    this.props
-      .createQuestion(question.description, question.alternatives)
-      .then((data) => {
-        this.setState({
-          // question: newQuestion,
-          submitted: true,
+    e.preventDefault();
+    if (!this.props.history.location.pathname.includes("edit"))
+      this.props
+        .createQuestion(question.description, question.alternatives)
+        .then((data) => {
+          this.setState({
+            // question: newQuestion,
+            submitted: true,
+          });
+          console.log(data);
+        })
+        .catch((e) => {
+          console.log(e);
         });
-        console.log(data);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
+    else
+      this.props
+        .updateQuestion( this.props.match.params.id, {description : question.description, alternatives : question.alternatives})
+        .then((data) => {
+          this.setState({
+            // question: newQuestion,
+            submitted: true,
+          });
+          console.log(data);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
   }
 
   newQuestion() {
@@ -178,7 +192,7 @@ class AddQuestion extends Component {
                         checked={question.alternatives[0].isCorrect}
                         label="Check for correct answer" />
                       <Form.Control id="title"
-                        name="0"                 
+                        name="0"
                         onChange={this.handleQuestionChange}
                         value={question.alternatives[0].text}
                         className="mb-3" placeholder="Enter answer option 1" />
@@ -188,7 +202,7 @@ class AddQuestion extends Component {
                         checked={question.alternatives[1].isCorrect}
                         type="checkbox" label="Check for correct answer" />
                       <Form.Control id="title"
-                        name="1"                 
+                        name="1"
                         onChange={this.handleQuestionChange}
                         value={question.alternatives[1].text}
                         className="mb-3" placeholder="Enter answer option 2" />
@@ -198,7 +212,7 @@ class AddQuestion extends Component {
                         checked={question.alternatives[2].isCorrect}
                         type="checkbox" label="Check for correct answer" />
                       <Form.Control id="title"
-                        name="2"                 
+                        name="2"
                         onChange={this.handleQuestionChange}
                         value={question.alternatives[2].text}
                         className="mb-3" placeholder="Enter answer option 3" />
@@ -208,17 +222,17 @@ class AddQuestion extends Component {
                         checked={question.alternatives[3].isCorrect}
                         type="checkbox" label="Check for correct answer" />
                       <Form.Control id="title"
-                        name="3"                 
+                        name="3"
                         onChange={this.handleQuestionChange}
                         value={question.alternatives[3].text}
                         className="mb-3" placeholder="Enter answer option 4" />
-                                              <Form.Check
+                      <Form.Check
                         name="4"
                         onChange={this.handleChange}
                         checked={question.alternatives[4].isCorrect}
                         type="checkbox" label="Check for correct answer" />
                       <Form.Control id="title"
-                        name="4"                 
+                        name="4"
                         onChange={this.handleQuestionChange}
                         value={question.alternatives[4].text}
                         className="mb-3" placeholder="Enter answer option 4" />
@@ -238,4 +252,4 @@ class AddQuestion extends Component {
   }
 }
 
-export default connect(null, { createQuestion })(AddQuestion);
+export default connect(null, { createQuestion, updateQuestion })(AddQuestion);

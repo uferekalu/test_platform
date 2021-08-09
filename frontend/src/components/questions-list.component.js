@@ -22,6 +22,7 @@ class QuestionsList extends Component {
       active: false,
       pageSize: 10,
       total: 0,
+      questionAnswers: [],
       items: [],
     };
   }
@@ -34,6 +35,15 @@ class QuestionsList extends Component {
 
     this.props.retrieveQuestions()
       .then(() => {
+
+        // init ansersArr
+        let answerAr = [];
+        this.props.questions.map(qustion => {
+          answerAr.push({id: qustion._id, choosen: -1})
+        });
+        console.log(answerAr)
+
+        this.setState({questionAnswers: answerAr})
         // pagination items
         let items = [];
         // init pagination
@@ -65,12 +75,21 @@ class QuestionsList extends Component {
     });
   }
 
-  handleAnswerOptionClick(isCorrect) {
+  handleAnswerOptionClick(isCorrect, id, index) {
     if (isCorrect) {
       this.setState({
-        score: this.state.score + 1
+        score: this.state.score + 1,
       })
     }
+
+    let objIndex = this.state.questionAnswers.findIndex(obj => obj.id === id);
+    let quesArr = this.state.questionAnswers;
+    console.log(id + "  " + JSON.stringify(this.state.questionAnswers))
+    quesArr[objIndex].choosen = index;
+    this.setState({
+      questionAnswers : quesArr
+    });
+    console.log(id + "  " + JSON.stringify(quesArr))
   }
 
   setActiveQuestion(question, index) {
@@ -107,7 +126,7 @@ class QuestionsList extends Component {
     const page = new URLSearchParams(search).get("page");
 
     const { questions } = this.props;
-    console.log(questions)
+    // console.log(questions)
     const hoursMinsSecs = { hours: 1, minutes: 20, seconds: 40 }
 
     return (
@@ -141,9 +160,9 @@ class QuestionsList extends Component {
                 ).map((question, index) => (
                   <>
                     <Col style={{ marginTop: "30px", minWidth: "400px", maxWidth: "400px" }}><span>No. {index + 1}: {question.description}{' '}</span>
-                      {question.alternatives.map((answerOption) => (
+                      {question.alternatives.map((answerOption, index) => (
                         <ListGroup className="mb-1">
-                          <ListGroup.Item onClick={() => this.handleAnswerOptionClick(answerOption.isCorrect)}>
+                          <ListGroup.Item action  active={this.state.questionAnswers.length > 0 && this.state.questionAnswers[this.state.questionAnswers.findIndex(obj => obj.id === question._id)].choosen === index} onClick={() => this.handleAnswerOptionClick(answerOption.isCorrect, question._id, index)}>
                             {answerOption.text}
                           </ListGroup.Item>
                         </ListGroup>
