@@ -36,3 +36,22 @@
     transform: rotate(360deg);
   }
 }
+
+.list-group-item:hover {background-color:grey; color:white;}
+.list-group-item .active {
+  background-color:grey;
+}
+.welcome {
+  text-align: center;
+  color: grey;
+}
+.account-button .action-but{
+  width: 50%;
+}
+.account-button-link{
+  color: white;
+  text-decoration: none;
+}
+.account-button-link:hover{
+  color: white;
+}

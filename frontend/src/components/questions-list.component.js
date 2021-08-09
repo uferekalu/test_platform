@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { retrieveQuestions, deleteAllQuestions } from "../actions/questions";
 import { Container, Row, Col, Button, Badge, ListGroup } from 'react-bootstrap';
+import CountDown from './countdown'
 
 class QuestionsList extends Component {
   constructor(props) {
@@ -15,7 +16,8 @@ class QuestionsList extends Component {
       currentQuestion: 0,
       currentIndex: -1,
       showScore: false,
-      score: 0
+      score: 0,
+      active: false,
     };
   }
 
@@ -60,13 +62,12 @@ class QuestionsList extends Component {
   render() {
     const { currentQuestion, currentIndex, showScore, score } = this.state;
     const { questions } = this.props;
-    const que = questions.map((ques) => ques)
-    console.log("this the question", que)
+    const hoursMinsSecs = {hours:1, minutes:20, seconds: 40}
 
     return (
       <>
       <Row className="justify-content-md-center">
-        <Col md="auto">
+        <Col md="auto mb-4">
           <h4>Instruction: Choose an answer to move to the next question!</h4>
         </Col>
       </Row>
@@ -82,15 +83,19 @@ class QuestionsList extends Component {
                     <Col>
                         <Button variant="primary"><span>There are {questions.length} questions</span> </Button>
                     </Col>
+                    <Col></Col><Col></Col>
+                    <Col>
+                        <Button variant="primary"><span><CountDown hoursMinsSecs={hoursMinsSecs} /> </span> </Button>
+                    </Col>
                   </Row>
                   <Row>
                     {questions && questions.map((question, index) => (
                     <>
-                      <Col><span>No. {index+1}: {' '}</span>{question.description}
+                      <Col key={index}><span>No. {index+1}: {' '}</span>{question.description}
                 
                     
-                          {question.alternatives.map((answerOption) => (
-                            <ListGroup>
+                          {question.alternatives.map((answerOption, index) => (
+                            <ListGroup className="options" key={index}>
                               <ListGroup.Item onClick={() => this.handleAnswerOptionClick(answerOption.isCorrect)}>
                                 {answerOption.text}
                               </ListGroup.Item>

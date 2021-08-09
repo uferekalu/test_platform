@@ -12,6 +12,14 @@ class QuestionDataService {
   create(data) {
     return http.post("/questions", data);
   }
+  
+  login(data) {
+    return http.post("/login", data);
+  }
+  
+  register(data) {
+    return http.post("/register", data);
+  }
 
   update(id, data) {
     return http.put(`/questions/${id}`, data);
