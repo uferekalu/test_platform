@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { createQuestion } from "../actions/questions";
 import { Row, Col, Form, FloatingLabel, Button } from 'react-bootstrap';
+import QuestionDataService from "../services/question-service";
 
 class AddQuestion extends Component {
   constructor(props) {
@@ -31,11 +32,33 @@ class AddQuestion extends Component {
           {
             "isCorrect": false,
             "text": ""
+          },
+          {
+            "isCorrect": false,
+            "text": ""
           }
         ]
       },
       submitted: false,
     };
+  }
+
+  componentDidMount() {
+    if(this.props.history.location.pathname.includes("edit"))
+      this.getQuestion(this.props.match.params.id);
+  }
+
+  getQuestion(id) {
+    QuestionDataService.get(id)
+      .then((response) => {
+        this.setState({
+          question: response.data,
+        });
+        console.log(response.data);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
   }
 
   onChangeDescription(e) {
@@ -48,6 +71,10 @@ class AddQuestion extends Component {
 
   handleChange(e) {
     let question = this.state.question;
+    // only one
+    question.alternatives.map(ele => {
+      ele.isCorrect = false;
+    })
     question.alternatives[e.target.name].isCorrect = e.target.checked;
     this.setState({
       question,
@@ -100,6 +127,10 @@ class AddQuestion extends Component {
           {
             "isCorrect": false,
             "text": ""
+          },
+          {
+            "isCorrect": false,
+            "text": ""
           }
         ]
       },
@@ -133,7 +164,7 @@ class AddQuestion extends Component {
                     <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                       <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
                         <Form.Label>Question</Form.Label>
-                        <Form.Control as="textarea" onChange={this.onChangeDescription} placeholder="Enter question" rows={15} />
+                        <Form.Control as="textarea" value={question.description} onChange={this.onChangeDescription} placeholder="Enter question" rows={15} />
                       </Form.Group>
                     </Form.Group>
                   </Col>
@@ -149,6 +180,7 @@ class AddQuestion extends Component {
                       <Form.Control id="title"
                         name="0"                 
                         onChange={this.handleQuestionChange}
+                        value={question.alternatives[0].text}
                         className="mb-3" placeholder="Enter answer option 1" />
                       <Form.Check
                         name="1"
@@ -180,6 +212,17 @@ class AddQuestion extends Component {
                         onChange={this.handleQuestionChange}
                         value={question.alternatives[3].text}
                         className="mb-3" placeholder="Enter answer option 4" />
+                                              <Form.Check
+                        name="4"
+                        onChange={this.handleChange}
+                        checked={question.alternatives[4].isCorrect}
+                        type="checkbox" label="Check for correct answer" />
+                      <Form.Control id="title"
+                        name="4"                 
+                        onChange={this.handleQuestionChange}
+                        value={question.alternatives[4].text}
+                        className="mb-3" placeholder="Enter answer option 4" />
+
                     </Form.Group>
                   </Col>
                 </Row>
