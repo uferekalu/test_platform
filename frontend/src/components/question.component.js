@@ -17,7 +17,7 @@ class Question extends Component {
       currentQuestion: {
         id: null,
         description: "",
-        alternative: ""
+        alternative: []
       },
       message: "",
     };

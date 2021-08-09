@@ -12,20 +12,53 @@ class AddQuestion extends Component {
     this.newQuestion = this.newQuestion.bind(this);
 
     this.state = {
-      id: null,
-      description: "",
-      alternatives: []
+      question: {
+        id: null,
+        description: "",
+        alternatives: [
+          {
+            "isCorrect": false,
+            "text": ""
+          },
+          {
+            "isCorrect": false,
+            "text": ""
+          },
+          {
+            "isCorrect": false,
+            "text": ""
+          },
+          {
+            "isCorrect": false,
+            "text": ""
+          }
+        ]
+      }
     };
   }
 
   onChangeDescription(e) {
+    let question = this.state.question;
+    question.description = e.target.value;
     this.setState({
-        description: e.target.value,
+      question,
     });
   }
 
   handleChange(e) {
-    
+    let question = this.state.question;
+    question.alternatives[e.target.name].isCorrect = e.target.value;
+    this.setState({
+      question,
+    });
+  }
+
+  handleQuestionChange(e) {
+    let question = this.state.question;
+    question.alternatives[e.target.name].text = e.target.value;
+    this.setState({
+      question,
+    });
   }
 
   saveQuestion() {
@@ -58,57 +91,86 @@ class AddQuestion extends Component {
   }
 
   render() {
+    const { question } = this.state;
+
     return (
       <>
-      <Row className="justify-content-md-center">
-        <Col xs="auto">
-          <h4>Add a Question</h4>
-        </Col>
-      </Row>
-      <Row className="justify-content-md-center">
-        {this.state.submitted ? (
-          <div>
-            <h4>You submitted successfully!</h4>
-            <button className="btn btn-success" onClick={this.newQuestion}>
-              Add
-            </button>
-          </div>
-        ) : (
-          <>
-          <Form>
-            <Row className="g-2">
-                <Col md>
-                  <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+        <Row className="justify-content-md-center">
+          <Col xs="auto">
+            <h4>Add a Question</h4>
+          </Col>
+        </Row>
+        <Row className="justify-content-md-center">
+          {this.state.submitted ? (
+            <div>
+              <h4>You submitted successfully!</h4>
+              <button className="btn btn-success" onClick={this.newQuestion}>
+                Add
+              </button>
+            </div>
+          ) : (
+            <>
+              <Form>
+                <Row className="g-2">
+                  <Col md>
+                    <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                       <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
                         <Form.Label>Question</Form.Label>
-                        <Form.Control as="textarea" placeholder="Enter question" rows={15} />
+                        <Form.Control as="textarea" onChange={this.onChangeDescription} placeholder="Enter question" rows={15} />
                       </Form.Group>
                     </Form.Group>
-                </Col>
-                <Col md>
-                  <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
-                    <Form.Label>Answer options with a checkbox for correct answer</Form.Label>
-                      <Form.Check type="checkbox" label="Check for correct answer" />
-                      <Form.Control className="mb-3"  placeholder="Enter answer option 1" />
-                      <Form.Check type="checkbox" label="Check for correct answer" />
-                      <Form.Control className="mb-3"  placeholder="Enter answer option 2" />
-                      <Form.Check type="checkbox" label="Check for correct answer" />
-                      <Form.Control className="mb-3"  placeholder="Enter answer option 3" />
-                      <Form.Check type="checkbox" label="Check for correct answer" />
-                      <Form.Control className="mb-3"  placeholder="Enter answer option 4" />
-                      <Form.Check type="checkbox" label="Check for correct answer" />
-                      <Form.Control className="mb-3"  placeholder="Enter answer option 5" />
-                  </Form.Group>
-                </Col>
-              </Row>
-                  <div className="d-grid gap-2">
-                    <Button variant="outline-primary">Submit</Button>
-                  </div>
-          </Form>
-          </>
-        )}
-      </Row>
-    </>
+                  </Col>
+                  <Col md>
+                    <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
+                      <Form.Label>Answer options with a checkbox for correct answer</Form.Label>
+                      <Form.Check
+                        name="0"
+                        onChange={this.handleChange}
+                        type="checkbox"
+                        value={question.alternatives[0].text}
+                        label="Check for correct answer" />
+                      <Form.Control id="title"
+                        name="0"                 
+                        onChange={this.handleQuestionChange}
+                        className="mb-3" placeholder="Enter answer option 1" />
+                      <Form.Check
+                        name="1"
+                        onChange={this.handleChange}
+                        type="checkbox" label="Check for correct answer" />
+                      <Form.Control id="title"
+                        name="1"                 
+                        onChange={this.handleQuestionChange}
+                        value={question.alternatives[1].text}
+                        className="mb-3" placeholder="Enter answer option 2" />
+                      <Form.Check
+                        name="2"
+                        onChange={this.handleChange}
+                        type="checkbox" label="Check for correct answer" />
+                      <Form.Control id="title"
+                        name="2"                 
+                        onChange={this.handleQuestionChange}
+                        value={question.alternatives[2].text}
+                        className="mb-3" placeholder="Enter answer option 3" />
+                      <Form.Check
+                        name="3"
+                        onChange={this.handleChange}
+                        type="checkbox" label="Check for correct answer" />
+                      <Form.Control id="title"
+                        name="3"                 
+                        onChange={this.handleQuestionChange}
+                        value={question.alternatives[3].text}
+                        className="mb-3" placeholder="Enter answer option 4" />
+                    </Form.Group>
+                  </Col>
+                </Row>
+                <div className="d-grid gap-2">
+                  <Button variant="outline-primary">Submit</Button>
+                </div>
+              </Form>
+            </>
+          )}
+        </Row>
+      </>
     );
   }
 }
