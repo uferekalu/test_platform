@@ -12,8 +12,10 @@ const CountDown = ({ hoursMinsSecs }) => {
         const mins = parseInt(localStorage.getItem("minutes"))
         const hrs = parseInt(localStorage.getItem("hours"))
         
-        if(hrs === 0 && mins === 0 && secs === 0) 
+        if(hrs === 0 && mins === 0 && secs === 0){
             reset()
+            document.getElementById('nexQuestion').click();
+        } 
         else if (mins === 0 && secs === 0) {
             setTime([hrs - 1, 59, 59]);
         } else if (secs === 0) {
@@ -27,13 +29,15 @@ const CountDown = ({ hoursMinsSecs }) => {
 
     useEffect(() => {
         const timerId = setInterval(() => tick(), 1000);
-        return () => clearInterval(timerId);
+        return () => {
+            clearInterval(timerId);
+        }
     });
 
     return (
         <div>
             <p>
-                {`${hrs.toString().padStart(2,'0')}:${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`}
+                {`${hrs.toString().padStart(2,'0')}:${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`} <div id="countDown" onClick={reset}/>
             </p>
         </div>
     );
