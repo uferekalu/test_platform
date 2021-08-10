@@ -3,8 +3,8 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { retrieveQuestions, deleteAllQuestions, simpleUpdateQuestion, deleteQuestion } from "../actions/questions";
 import CountDown from './countdown'
-import { Container, Row, Col, Button, Badge, ListGroup, Pagination } from 'react-bootstrap';
-
+import { Container, Row, Col, Button, Badge, ListGroup, Pagination, Alert } from 'react-bootstrap';
+import SweetAlert from 'react-bootstrap-sweetalert';
 
 class QuestionsList extends Component {
   constructor(props) {
@@ -12,18 +12,21 @@ class QuestionsList extends Component {
     this.refreshData = this.refreshData.bind(this);
     this.setActiveQuestion = this.setActiveQuestion.bind(this);
     this.removeAllQuestions = this.removeAllQuestions.bind(this);
-    this.removeQuestion = this.removeQuestion.bind(this);
-    
+    this.triggerAlert = this.triggerAlert.bind(this);
+    this.closeAlert = this.closeAlert.bind(this);
+
     this.state = {
       currentQuestion: 0,
       currentIndex: -1,
       showScore: false,
       score: 0,
       active: false,
+      show: false,
       pageSize: 10,
       total: 0,
       questionAnswers: [],
       items: [],
+      idToDelete:0,
     };
   }
 
@@ -39,11 +42,11 @@ class QuestionsList extends Component {
         // init ansersArr
         let answerAr = [];
         this.props.questions.map(qustion => {
-          answerAr.push({id: qustion._id, choosen: -1})
+          answerAr.push({ id: qustion._id, choosen: -1 })
         });
         console.log(answerAr)
 
-        this.setState({questionAnswers: answerAr})
+        this.setState({ questionAnswers: answerAr })
         // pagination items
         let items = [];
         // init pagination
@@ -87,7 +90,7 @@ class QuestionsList extends Component {
     console.log(id + "  " + JSON.stringify(this.state.questionAnswers))
     quesArr[objIndex].choosen = index;
     this.setState({
-      questionAnswers : quesArr
+      questionAnswers: quesArr
     });
     console.log(id + "  " + JSON.stringify(quesArr))
   }
@@ -111,16 +114,26 @@ class QuestionsList extends Component {
       });
   }
 
-  removeQuestion(id) {
+  triggerAlert(id) {
+    this.setState({ show: true, idToDelete: id});    
+  }
+
+  closeAlert() {
+    this.setState({ show: false });
+  }
+
+  removeQuestion() {
     this.props
-      .deleteQuestion(id)
+      .deleteQuestion(this.state.idToDelete)
+      .then (() => this.closeAlert())
       .catch((e) => {
         console.log(e);
+        this.closeAlert();
       });
   }
 
   render() {
-    const { currentQuestion, currentIndex, showScore, score, pageSize } = this.state;
+    const { show, showScore, score, pageSize } = this.state;
     // get query from url
     const search = this.props.location.search;
     const page = new URLSearchParams(search).get("page");
@@ -133,7 +146,7 @@ class QuestionsList extends Component {
       <div>
         <Row className="justify-content-md-center">
           <Col md="auto mb-4">
-            <h4>Instruction: Choose an answer to move to the next question!</h4>
+            <h4>Edit and delete Questions</h4>
           </Col>
         </Row>
         <Container>
@@ -150,7 +163,7 @@ class QuestionsList extends Component {
                 </Col>
                 <Col></Col><Col></Col>
                 <Col>
-                  <Button variant="primary"><span><CountDown hoursMinsSecs={hoursMinsSecs} /> </span> </Button>
+                  {/* <Button variant="primary"><span><CountDown hoursMinsSecs={hoursMinsSecs} /> </span> </Button> */}
                 </Col>
               </Row>
               <Row>
@@ -162,18 +175,47 @@ class QuestionsList extends Component {
                     <Col style={{ marginTop: "30px", minWidth: "400px", maxWidth: "400px" }}><span>No. {index + 1}: {question.description}{' '}</span>
                       {question.alternatives.map((answerOption, index) => (
                         <ListGroup className="mb-1">
-                          <ListGroup.Item action  active={this.state.questionAnswers.length > 0 && this.state.questionAnswers[this.state.questionAnswers.findIndex(obj => obj.id === question._id)].choosen === index} onClick={() => this.handleAnswerOptionClick(answerOption.isCorrect, question._id, index)}>
+                          <ListGroup.Item action active={this.state.questionAnswers.length > 0 && this.state.questionAnswers[this.state.questionAnswers.findIndex(obj => obj.id === question._id)].choosen === index} onClick={() => this.handleAnswerOptionClick(answerOption.isCorrect, question._id, index)}>
                             {answerOption.text}
                           </ListGroup.Item>
                         </ListGroup>
                       ))}
                       <Button onClick={() => this.props.history.push("/question/edit/" + question._id)} variant="outline-warning">Edit</Button>{' '}
-                      <Button onClick={() => this.removeQuestion(question._id)} variant="outline-danger">Delete</Button>{' '}
+                      <Button onClick={() => this.triggerAlert(question._id)} variant="outline-danger">Delete</Button>{' '}
                     </Col>
-
                   </>
                 ))}
               </Row>
+              <SweetAlert
+                      warning
+                      showCancel
+                      confirmBtnText="Yes, delete it!"
+                      confirmBtnBsStyle="danger"
+                      title="Are you sure?"
+                      onConfirm={() => this.removeQuestion()}
+                      onCancel={this.closeAlert}
+                      focusCancelBtn
+                      show={show} 
+                    >
+                      You will not be able to recover this question!
+                    </SweetAlert>
+              {/* <Alert show={show} variant="success">
+        <Alert.Heading>Caution!!</Alert.Heading>
+        <p>
+          Do you want to delete selected question ?
+        </p>
+        <hr />
+        <div className="d-flex justify-content-end">
+          <Button onClick={} variant="outline-success">
+            No take me back
+          </Button>
+          <Button onClick={} variant="outline-danger">
+            Delete
+          </Button>
+
+        </div>
+      </Alert> */}
+
               {/* <Row>
               {questions && questions.map((question, index) => (
                 <Col key={index}><span>No. {index+1}: {' '}</span>{question.description}

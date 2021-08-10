@@ -28,7 +28,7 @@ class Dashboard extends Component {
                     </Col>
                     
                     <Button type="submit" variant="primary" className="mb-4">
-                        <Link to="/tutorials" className="account-button-link">
+                        <Link to="/test" className="account-button-link w-100 ">
                             Start Test
                         </Link>
                     </Button>

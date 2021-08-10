@@ -17,6 +17,7 @@ import Register from './components/Register'
 import Login from './components/Login'
 import PrivateRoute from "./components/private-route/PrivateRoute";
 import Dashboard from "./components/Dashboard";
+import TestTab from "./components/interviewee-question";
 
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {
@@ -65,6 +66,7 @@ class App extends Component {
             <Route exact path="/" component={Home} />
             <Route exact path="/tutorials" component={QuestionsList} />
             <Route exact path="/add" component={AddQuestion} />
+            <Route path="/test" component={TestTab} />
             <Route path="/tutorials/:id" component={Question} />
             <Route path="/question/edit/:id" component={AddQuestion} />
             <Route path="/register" component={Register} />
