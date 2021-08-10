@@ -38,7 +38,7 @@ class Home extends Component {
                 ) : (
                     <Row className="account-button mt-5">
                         <Button variant="primary" className="mb-4">
-                            <Link to="/questions" className="account-button-link">
+                            <Link to="/test" className="account-button-link">
                                 Click here to take your test...
                             </Link>
                         </Button>

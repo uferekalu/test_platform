@@ -51,7 +51,7 @@ class App extends Component {
           </Link>
           <div className="navbar-nav mr-auto">
             <li className="nav-item">
-              <Link to={"/questions"} className="nav-link">
+              <Link to={"/test"} className="nav-link">
                 Question lists
               </Link>
             </li>
