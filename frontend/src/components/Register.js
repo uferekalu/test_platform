@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import { registerUser } from "../actions/authActions";
 import { Container, Row, Col, Button, Form } from 'react-bootstrap';
 import classnames from "classnames";
+import Loader from './Loader'
 
 class Register extends Component {
   constructor() {
@@ -89,7 +90,7 @@ class Register extends Component {
                                         invalid: errors.name
                                     })}
                                 />
-                                <span className="red-text">{errors.name}</span>
+                                <span style={{color:"red"}}>{errors.name}</span>
                             </Col>
                         </Form.Group>
                         <Form.Group as={Row} className="mb-3">
@@ -108,7 +109,7 @@ class Register extends Component {
                                         invalid: errors.email
                                     })}
                                 />
-                                <span className="red-text">{errors.email}</span>
+                                <span style={{color:"red"}}>{errors.email}</span>
                             </Col>
                         </Form.Group>
                         <Form.Group as={Row} className="mb-3">
@@ -127,7 +128,7 @@ class Register extends Component {
                                         invalid: errors.password
                                     })}
                                 />
-                                <span className="red-text">{errors.password}</span>
+                                <span style={{color:"red"}}>{errors.password}</span>
                             </Col>
                         </Form.Group>
                         <Form.Group as={Row} className="mb-3">
@@ -146,13 +147,13 @@ class Register extends Component {
                                         invalid: errors.password2
                                     })}
                                 />
-                                <span className="red-text">{errors.password2}</span>
+                                <span style={{color:"red"}}>{errors.password2}</span>
                             </Col>
                         </Form.Group>
                         <Row className="mt-5">
                             <Button type="submit" variant="primary" className="mb-4">
                                 <Link to="/register" className="account-button-link">
-                                    Sign up...
+                                   {this.props.auth.loading && <Loader />} Sign up...
                                 </Link>
                             </Button>
                         </Row>

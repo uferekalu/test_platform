@@ -2,9 +2,11 @@ import React, { Component } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import { Container } from 'react-bootstrap';
+import { connect } from "react-redux";
 import jwt_decode from "jwt-decode";
 import setAuthToken from "./utils/setAuthToken";
-import { setCurrentUser, logoutUser } from "./actions/authActions";
+import { setCurrentUser, logoutUser, loginUser } from "./actions/authActions";
+import PropTypes from "prop-types";
 import "./App.css";
 
 import store from "./store";
@@ -48,7 +50,7 @@ class App extends Component {
           </Link>
           <div className="navbar-nav mr-auto">
             <li className="nav-item">
-              <Link to={"/tutorials"} className="nav-link">
+              <Link to={"/questions"} className="nav-link">
                 Question lists
               </Link>
             </li>
@@ -63,9 +65,9 @@ class App extends Component {
         <Container className="mt-3">
           <Switch>
             <Route exact path="/" component={Home} />
-            <Route exact path="/tutorials" component={QuestionsList} />
+            <PrivateRoute exact path="/questions" component={QuestionsList} />
             <Route exact path="/add" component={AddQuestion} />
-            <Route path="/tutorials/:id" component={Question} />
+            <Route path="/question/:id" component={Question} />
             <Route path="/question/edit/:id" component={AddQuestion} />
             <Route path="/register" component={Register} />
             <Route path="/login" component={Login} />
@@ -77,4 +79,17 @@ class App extends Component {
   }
 }
 
-export default App;
+App.propTypes = {
+  loginUser: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired
+};
+
+const mapStateToProps = state => ({
+  auth: state.auth,
+  errors: state.errors
+});
+
+export default connect(
+  mapStateToProps,
+  { loginUser }
+)(App);

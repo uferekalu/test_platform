@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import { loginUser } from "../actions/authActions";
 import classnames from "classnames";
 import { Container, Row, Col, Button, Form } from 'react-bootstrap';
+import Loader from './Loader'
 
 class Login extends Component {
     constructor() {
@@ -50,6 +51,8 @@ class Login extends Component {
 
     render() {
     const { errors } = this.state;
+    console.log("This is loading", !this.props.auth.loading)
+    
     return (
         <Container>
             <Row className="justify-content-md-center">
@@ -88,7 +91,7 @@ class Login extends Component {
                                     invalid: errors.email || errors.emailnotfound
                                 })}
                             />
-                            <span className="red-text">
+                            <span style={{color:"red"}}>
                                 {errors.email}
                                 {errors.emailnotfound}
                             </span>
@@ -110,7 +113,7 @@ class Login extends Component {
                                     invalid: errors.password || errors.passwordincorrect
                                 })}
                             />
-                            <span className="red-text">
+                            <span style={{color:"red"}}>
                                 {errors.password}
                                 {errors.passwordincorrect}
                             </span>
@@ -118,9 +121,15 @@ class Login extends Component {
                     </Form.Group>
                     <Row className="mt-5">
                         <Button type="submit" variant="primary" className="mb-4">
-                            <Link to="/login" className="account-button-link">
-                                Login...
-                            </Link>
+                            {!this.props.auth.loading ? (
+                                <Link to="/login" className="account-button-link">
+                                    Login...
+                                </Link>                               
+                            ) : (
+                                <>
+                                    <Loader /> Logging in...
+                                </>
+                            )}
                         </Button>
                     </Row>
                 </Form>
