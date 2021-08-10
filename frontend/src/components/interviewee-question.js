@@ -154,10 +154,6 @@ class TestTab extends Component {
                 </Col>
               </Row>
               <Row className=" justify-content-center">
-                {/* {questions && questions.slice(
-                  pageSize * (page - 1),
-                  pageSize * (page - 1) + pageSize
-                ).map((question, index) => ( */}
                 { questions[count-1] &&
                   <>
                     <div style={{ marginTop: "30px", minWidth: "400px", maxWidth: "700px" }}><span>No. {count}: {questions.length > 0 ? questions[count-1].description : ""}{' '}</span>
@@ -173,30 +169,8 @@ class TestTab extends Component {
                   </>
                 }
               </Row>
-              {/* <Row>
-              {questions && questions.map((question, index) => (
-                <Col key={index}><span>No. {index+1}: {' '}</span>{questions[count-1].description}
-                    {questions[count-1].alternatives.map((answerOption, index) => (
-                      <ListGroup className="options" key={index}>
-                        <ListGroup.Item onClick={() => this.handleAnswerOptionClick(answerOption.isCorrect)}>
-                          {answerOption.text}
-                        </ListGroup.Item>
-                      </ListGroup>
-                    ))}
-                </Col>
-              ))}
-            </Row> */}
             </>
           )}
-          {/* <div className="mt-5 d-flex justify-content-center">
-            <Pagination bsSize="medium">
-              <Pagination.First />
-              <Pagination.Prev />
-              {this.state.items}
-              <Pagination.Next />
-              <Pagination.Last />
-            </Pagination>
-          </div> */}
         </Container>
       </div>
     )
