@@ -68,7 +68,10 @@ class App extends Component {
             <Route exact path="/" component={Home} />
             <PrivateRoute exact path="/questions" component={QuestionsList} />
             <Route exact path="/add" component={AddQuestion} />
+<<<<<<< HEAD
             <Route path="/test" component={TestTab} />
+=======
+>>>>>>> a13e925b02f95db930aeada43bc3372d22882fa4
             <Route path="/question/:id" component={Question} />
             <Route path="/question/edit/:id" component={AddQuestion} />
             <Route path="/register" component={Register} />
