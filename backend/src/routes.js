@@ -37,13 +37,33 @@ router.post("/questions", async (req, res) => {
   try {
     const { description } = req.body;
     const { alternatives } = req.body;
+    const { category } = req.body;
 
-    const question = await Question.create({
-      description,
-      alternatives,
-    });
-
-    return res.status(201).json(question);
+    const { authorization } = req.headers;
+    const token = authorization
+      ? authorization.split("Bearer ").length
+        ? authorization.split("Bearer ")[1]
+        : null
+      : null;
+    console.log(token);
+    if (token) {
+      // verify token
+      const user = jwt.verify(token, process.env.secretOrKey);
+      if (user) {
+        const createdBy = user.id;
+        const question = await Question.create({
+          description,
+          alternatives,
+          category,
+          createdBy,
+        });
+        return res.status(201).json(question);
+      } else {
+        return res.status(500).json({ error: "Verification failed!" });
+      }
+    } else {
+      return res.status(500).json({ error: "Token not found" });
+    }
   } catch (error) {
     return res.status(500).json({ error: error });
   }
@@ -53,21 +73,42 @@ router.post("/questions", async (req, res) => {
 router.put("/questions/:id", async (req, res) => {
   try {
     const _id = req.params.id;
-    const { description, alternatives } = req.body;
+    const { description, alternatives, category } = req.body;
 
     let question = await Question.findOne({ _id });
-
-    if (!question) {
-      question = await Question.create({
-        description,
-        alternatives,
-      });
-      return res.status(201).json(question);
+    const { authorization } = req.headers;
+    const token = authorization
+      ? authorization.split("Bearer ").length
+        ? authorization.split("Bearer ")[1]
+        : null
+      : null;
+    console.log(token);
+    if (token) {
+      // verify token
+      const user = jwt.verify(token, process.env.secretOrKey);
+      if (user) {
+        const createdBy = user.id;
+        if (!question) {
+          question = await Question.create({
+            description,
+            alternatives,
+            category,
+            createdBy,
+          });
+          return res.status(201).json(question);
+        } else {
+          question.description = description;
+          question.alternatives = alternatives;
+          question.category = category;
+          question.createdBy = createdBy;
+          await question.save();
+          return res.status(200).json(question);
+        }
+      } else {
+        return res.status(500).json({ error: "Verification failed!" });
+      }
     } else {
-      question.description = description;
-      question.alternatives = alternatives;
-      await question.save();
-      return res.status(200).json(question);
+      return res.status(500).json({ error: "Token not found" });
     }
   } catch (error) {
     return res.status(500).json({ error: error });
@@ -91,7 +132,7 @@ router.delete("/questions/:id", async (req, res) => {
   }
 });
 
-// get all questions
+// get all categories
 router.get("/categories", async (req, res) => {
   try {
     const categories = await Category.find();
@@ -100,7 +141,8 @@ router.get("/categories", async (req, res) => {
     return res.status(500).json({ error: error });
   }
 });
-// get all questions
+
+// create a category
 router.post("/category", async (req, res) => {
   try {
     const { name } = req.body;
@@ -112,7 +154,7 @@ router.post("/category", async (req, res) => {
       : null;
     console.log(token);
     if (token) {
-      //erify with token
+      //verify with token
       const user = jwt.verify(token, process.env.secretOrKey);
       if (user) {
         const createdBy = user.id;
@@ -132,6 +174,83 @@ router.post("/category", async (req, res) => {
   }
 });
 
+// update one category
+router.put("/category/:id", async (req, res) => {
+  try {
+    const _id = req.params.id;
+    const { name } = req.body;
+
+    let category_exist = await Category.findOne({ _id });
+
+    const { authorization } = req.headers;
+    const token = authorization
+      ? authorization.split("Bearer ").length
+        ? authorization.split("Bearer ")[1]
+        : null
+      : null;
+    console.log(token);
+    if (token) {
+      //verify with token
+      const user = jwt.verify(token, process.env.secretOrKey);
+      if (user) {
+        const createdBy = user.id;
+        if (!category_exist) {
+          category_exist = await Category.create({
+            name,
+            createdBy,
+          });
+          return res.status(201).json(category_exist);
+        } else {
+          category_exist.name = name;
+          category_exist.createdBy = createdBy;
+          await category_exist.save();
+          return res.status(200).json(category_exist);
+        }
+      } else {
+        return res.status(500).json({ error: "Verification failed!" });
+      }
+    } else {
+      return res.status(500).json({ error: "Token not found" });
+    }
+  } catch (error) {
+    return res.status(500).json({ error: error });
+  }
+});
+
+//get a category
+router.get("/category/:id", async (req, res) => {
+  try {
+    const _id = req.params.id;
+
+    const category = await Category.findOne({ _id });
+    if (!category) {
+      return res.status(404).json({});
+    } else {
+      return res.status(200).json(category);
+    }
+  } catch (error) {
+    return res.status(500).json({ error: error });
+  }
+});
+
+// delete one category
+router.delete("/category/:id", async (req, res) => {
+  try {
+    const _id = req.params.id;
+
+    const category = await Category.deleteOne({ _id });
+
+    if (category.deletedCount === 0) {
+      return res.status(404).json({ status: "failed" });
+    } else {
+      return res.status(204).json({ status: "success" });
+    }
+  } catch (error) {
+    return res.status(500).json({ error: error });
+  }
+});
+
+//create a test
 router.post("/test", async (req, res) => {
   try {
     const { name, category, questions, passPercentage = 75, logo } = req.body;
@@ -166,6 +285,56 @@ router.post("/test", async (req, res) => {
   }
 });
 
+// update one test
+router.put("/test/:id", async (req, res) => {
+  try {
+    const _id = req.params.id;
+    const { name, category, questions, passPercentage = 75, logo } = req.body;
+
+    let test_exist = await Test.findOne({ _id });
+
+    const { authorization } = req.headers;
+    const token = authorization
+      ? authorization.split("Bearer ").length
+        ? authorization.split("Bearer ")[1]
+        : null
+      : null;
+    console.log(token);
+    if (token) {
+      //verify with token
+      const user = jwt.verify(token, process.env.secretOrKey);
+      if (user) {
+        const createdBy = user.id;
+        if (!test_exist) {
+          test_exist = await Test.create({
+            name,
+            category,
+            questions,
+            passPercentage,
+            createdBy,
+          });
+          return res.status(201).json(test_exist);
+        } else {
+          test_exist.name = name;
+          test_exist.category = category;
+          test_exist.questions = questions;
+          test_exist.passPercentage = passPercentage;
+          test_exist.createdBy = createdBy;
+          await test_exist.save();
+          return res.status(200).json(test_exist);
+        }
+      } else {
+        return res.status(500).json({ error: "Verification failed!" });
+      }
+    } else {
+      return res.status(500).json({ error: "Token not found" });
+    }
+  } catch (error) {
+    return res.status(500).json({ error: error });
+  }
+});
+
+//get all tests
 router.get("/tests", async (req, res) => {
   try {
     const tests = await Test.find();
@@ -175,6 +344,7 @@ router.get("/tests", async (req, res) => {
   }
 });
 
+// submit tests
 router.post("/tests/submit", async (req, res) => {
   try {
     const { test, answers, passPercentage = 75, attempt } = req.body;
