@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-import { Container } from 'react-bootstrap';
+import { Container, Nav, NavDropdown, Navbar } from 'react-bootstrap';
 import { connect } from "react-redux";
 import jwt_decode from "jwt-decode";
 import setAuthToken from "./utils/setAuthToken";
@@ -13,6 +13,7 @@ import store from "./store";
 
 import AddQuestion from './components/add-question.component'
 import QuestionsList from './components/questions-list.component'
+import CategoryList from './components/categories-list.component'
 import Question from './components/question.component'
 import Home from './components/home'
 import Register from './components/Register'
@@ -20,6 +21,7 @@ import Login from './components/Login'
 import PrivateRoute from "./components/private-route/PrivateRoute";
 import Dashboard from "./components/Dashboard";
 import TestTab from "./components/interviewee-question";
+import CategoryCreat from "./components/categories";
 
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {
@@ -52,7 +54,7 @@ class App extends Component {
           <div className="navbar-nav mr-auto">
             <li className="nav-item">
               <Link to={"/test"} className="nav-link">
-                Question lists
+                  Test
               </Link>
             </li>
             <li className="nav-item">
@@ -60,6 +62,32 @@ class App extends Component {
                 Add question
               </Link>
             </li>
+            <li className="nav-item">
+              <Link to={"/Category/add"} className="nav-link">
+                Add Category
+              </Link>
+            </li>
+            <Navbar.Toggle aria-controls="navbar-dark-example" />
+            <Navbar.Collapse id="navbar-dark-example">
+              <Nav>
+                <NavDropdown
+                  id="nav-dropdown-dark-example"
+                  title="Edit/Delete"
+                  menuVariant="dark"
+                >
+                  <NavDropdown.Item>
+                    <Link to={"/questions"} className="nav-link">
+                    Question list
+                    </Link>
+                  </NavDropdown.Item>
+                  <NavDropdown.Item>
+                    <Link to={"/Categoris"} className="nav-link">
+                      Category list
+                    </Link>
+                  </NavDropdown.Item>
+                </NavDropdown>
+              </Nav>
+            </Navbar.Collapse>
           </div>
         </nav>
 
@@ -73,6 +101,10 @@ class App extends Component {
             <Route path="/question/edit/:id" component={AddQuestion} />
             <Route path="/register" component={Register} />
             <Route path="/login" component={Login} />
+            <Route path="/Category/add" component={CategoryCreat} />
+            <Route exact path="/Categoris" component={CategoryList} />
+            <Route path="/Categoris/edit/:id" component={CategoryCreat} />
+
             <PrivateRoute exact path="/dashboard" component={Dashboard} />
           </Switch>
         </Container>
