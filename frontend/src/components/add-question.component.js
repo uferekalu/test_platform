@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { createQuestion, updateQuestion } from "../actions/questions";
+import { retrieveCategory } from "../actions/categories";
 import { Row, Col, Form, FloatingLabel, Button } from 'react-bootstrap';
 import QuestionDataService from "../services/question-service";
 
@@ -12,7 +13,8 @@ class AddQuestion extends Component {
     this.handleQuestionChange = this.handleQuestionChange.bind(this);
     this.saveQuestion = this.saveQuestion.bind(this);
     this.newQuestion = this.newQuestion.bind(this);
-
+    this.handleSelectorChange = this.handleSelectorChange.bind(this);
+    
     this.state = {
       question: {
         description: "",
@@ -44,6 +46,7 @@ class AddQuestion extends Component {
   }
 
   componentDidMount() {
+    this.props.retrieveCategory();
     if (this.props.history.location.pathname.includes("edit"))
       this.getQuestion(this.props.match.params.id);
   }
@@ -53,6 +56,7 @@ class AddQuestion extends Component {
       .then((response) => {
         this.setState({
           question: response.data,
+          category: response.data.category,
         });
         console.log(response.data);
       })
@@ -89,13 +93,17 @@ class AddQuestion extends Component {
     });
   }
 
+  handleSelectorChange(e) {
+    this.setState({category: e.target.value})
+  }
+
   saveQuestion(e) {
     const { question } = this.state;
 
     e.preventDefault();
     if (!this.props.history.location.pathname.includes("edit"))
       this.props
-        .createQuestion(question.description, question.alternatives)
+        .createQuestion(question.description, question.alternatives, this.state.category)
         .then((data) => {
           this.setState({
             // question: newQuestion,
@@ -108,7 +116,7 @@ class AddQuestion extends Component {
         });
     else
       this.props
-        .updateQuestion(this.props.match.params.id, { description: question.description, alternatives: question.alternatives })
+        .updateQuestion(this.props.match.params.id, { description: question.description, alternatives: question.alternatives, category: this.state.category })
         .then((data) => {
           this.setState({
             // question: newQuestion,
@@ -125,6 +133,7 @@ class AddQuestion extends Component {
     this.setState({
       question: {
         description: "",
+        category: "",
         alternatives: [
           {
             "isCorrect": false,
@@ -154,6 +163,7 @@ class AddQuestion extends Component {
 
   render() {
     const { question } = this.state;
+    const { categories } = this.props;
 
     return (
       <>
@@ -173,7 +183,19 @@ class AddQuestion extends Component {
           ) : (
             <>
               <Form onSubmit={this.saveQuestion}>
-                <Row className="g-2">
+                <Row className="mw-50 g-2">
+                  <Col className="" md>
+                  <Form.Label>Category</Form.Label>
+                    <Form.Select value={this.state.category} onChange={this.handleSelectorChange} aria-label="Default select example">
+                      <option>select category</option>
+                      {categories.map((category) => (
+                      <option value={category._id}>{category.name}</option>
+                      ))}
+                    </Form.Select>
+                  </Col>
+</Row>
+                  <Row className="g-2">
+
                   <Col md>
                     <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                       <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
@@ -252,4 +274,10 @@ class AddQuestion extends Component {
   }
 }
 
-export default connect(null, { createQuestion, updateQuestion })(AddQuestion);
+const mapStateToProps = (state) => {
+  return {
+    categories: state.categories,
+  };
+};
+
+export default connect(mapStateToProps, { retrieveCategory, createQuestion, updateQuestion })(AddQuestion);

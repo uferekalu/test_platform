@@ -54,18 +54,30 @@ class App extends Component {
           <div className="navbar-nav mr-auto">
             <li className="nav-item">
               <Link to={"/test"} className="nav-link">
-                  Test
+                Take Test
               </Link>
             </li>
             <li className="nav-item">
-              <Link to={"/add"} className="nav-link">
-                Add question
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link to={"/Category/add"} className="nav-link">
-                Add Category
-              </Link>
+              <Navbar.Collapse id="navbar-dark-example">
+                <Nav>
+                  <NavDropdown
+                    id="nav-dropdown-dark-example"
+                    title="Add"
+                    menuVariant="dark"
+                  >
+                    <NavDropdown.Item>
+                      <Link to={"/add"} className="nav-link">
+                        Add Question
+                      </Link>
+                    </NavDropdown.Item>
+                    <NavDropdown.Item>
+                      <Link to={"/Category/add"} className="nav-link">
+                        Add Category
+                      </Link>
+                    </NavDropdown.Item>
+                  </NavDropdown>
+                </Nav>
+              </Navbar.Collapse>
             </li>
             <Navbar.Toggle aria-controls="navbar-dark-example" />
             <Navbar.Collapse id="navbar-dark-example">
@@ -77,7 +89,7 @@ class App extends Component {
                 >
                   <NavDropdown.Item>
                     <Link to={"/questions"} className="nav-link">
-                    Question list
+                      Question list
                     </Link>
                   </NavDropdown.Item>
                   <NavDropdown.Item>
@@ -96,9 +108,9 @@ class App extends Component {
             <Route exact path="/" component={Home} />
             <PrivateRoute exact path="/questions" component={QuestionsList} />
             <Route exact path="/add" component={AddQuestion} />
+            <Route exact path="/question/edit/:id" component={AddQuestion} />
             <Route path="/test" component={TestTab} />
             <Route path="/question/:id" component={Question} />
-            <Route path="/question/edit/:id" component={AddQuestion} />
             <Route path="/register" component={Register} />
             <Route path="/login" component={Login} />
             <Route path="/Category/add" component={CategoryCreat} />

@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { retrieveQuestions, deleteAllQuestions, simpleUpdateQuestion, deleteQuestion } from "../actions/questions";
+import { retrieveCategory } from "../actions/categories";
 import CountDown from './countdown'
 import { Container, Row, Col, Button, Badge, ListGroup, Pagination, Alert } from 'react-bootstrap';
 import SweetAlert from 'react-bootstrap-sweetalert';
@@ -36,6 +37,7 @@ class QuestionsList extends Component {
       search: '?page=1'
     });
 
+    this.props.retrieveCategory();
     this.props.retrieveQuestions()
       .then(() => {
 
@@ -76,6 +78,21 @@ class QuestionsList extends Component {
       currentQuestion: null,
       currentIndex: -1,
     });
+  }
+
+  mapCategoryIdToName (id) {
+    console.log("1wwss " + id)
+    // console.log("1ss " + this.props.categories)
+    let name = "";
+    if(this.props.categories){
+      this.props.categories.map(category => {
+        console.log("1ss " + category._id)
+        if(category._id === id) {
+          name = category.name;
+        }
+      });
+    }
+    return name;
   }
 
   handleAnswerOptionClick(isCorrect, id, index) {
@@ -173,6 +190,8 @@ class QuestionsList extends Component {
                 ).map((question, index) => (
                   <>
                     <Col style={{ marginTop: "30px", minWidth: "400px", maxWidth: "400px" }}><span>No. {index + 1}: {question.description}{' '}</span>
+                    <br/>
+                    <Badge className="m-2" bg="secondary">{this.mapCategoryIdToName(question.category)}</Badge>
                       {question.alternatives.map((answerOption, index) => (
                         <ListGroup className="mb-1">
                           <ListGroup.Item action active={this.state.questionAnswers.length > 0 && this.state.questionAnswers[this.state.questionAnswers.findIndex(obj => obj.id === question._id)].choosen === index} onClick={() => this.handleAnswerOptionClick(answerOption.isCorrect, question._id, index)}>
@@ -249,8 +268,9 @@ class QuestionsList extends Component {
 const mapStateToProps = (state) => {
   return {
     questions: state.questions,
+    categories: state.categories,
   };
 };
 
 
-export default connect(mapStateToProps, { retrieveQuestions, deleteAllQuestions, deleteQuestion })(QuestionsList);
+export default connect(mapStateToProps, { retrieveQuestions, deleteAllQuestions, deleteQuestion, retrieveCategory })(QuestionsList);
