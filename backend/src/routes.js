@@ -388,6 +388,23 @@ router.post("/tests/submit", async (req, res) => {
   }
 });
 
+
+// delete one category
+router.delete("/test/:id", async (req, res) => {
+  try {
+    const _id = req.params.id;
+
+    const category = await Test.deleteOne({ _id });
+
+    if (category.deletedCount === 0) {
+      return res.status(404).json({ status: "failed" });
+    } else {
+      return res.status(204).json({ status: "success" });
+    }
+  } catch (error) {
+    return res.status(500).json({ error: error });
+  }
+});
 // this one is just a test
 router.get("/", (req, res) => {
   res.send("HEll0 W0RlD");

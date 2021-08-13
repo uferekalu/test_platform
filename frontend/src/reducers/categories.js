@@ -8,18 +8,18 @@ import {
   
   const initialState = [];
   
-  function questionReducer(questions = initialState, action) {
+  function categoriesReducer(categories = initialState, action) {
     const { type, payload } = action;
   
     switch (type) {
       case CREATE_CATEGORIES:
-        return [...questions, payload];
+        return [...categories, payload];
   
       case RETRIEVE_CATEGORIES:
         return payload;
   
       case UPDATE_CATEGORY:
-        return questions.map((question) => {
+        return categories.map((question) => {
           if (question._id === payload._id) {
             return {
               ...question,
@@ -31,14 +31,14 @@ import {
         });
   
       case DELETE_CATEGORY:
-        return questions.filter(({ _id }) => _id !== payload.id);
+        return categories.filter(({ _id }) => _id !== payload.id);
   
       case DELETE_ALL_CATEGORIES:
         return [];
   
       default:
-        return questions;
+        return categories;
     }
   };
   
-  export default questionReducer;
+  export default categoriesReducer;
