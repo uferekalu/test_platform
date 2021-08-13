@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import { retrieveQuestions, deleteAllQuestions, simpleUpdateQuestion, deleteQuestion } from "../actions/questions";
-import { retrieveCategory } from "../actions/categories";
+import { retrieveCategory, deleteAllCategory, simpleUpdateCategory, deleteCategory } from "../actions/categories";
 import CountDown from './countdown'
 import { Container, Row, Col, Button, Badge, ListGroup, Pagination, Alert } from 'react-bootstrap';
 import SweetAlert from 'react-bootstrap-sweetalert';
+import categories from "./categories";
 
-class QuestionsList extends Component {
+class CategoryList extends Component {
   constructor(props) {
     super(props);
     this.refreshData = this.refreshData.bind(this);
@@ -37,23 +37,14 @@ class QuestionsList extends Component {
       search: '?page=1'
     });
 
-    this.props.retrieveCategory();
-    this.props.retrieveQuestions()
+    this.props.retrieveCategory()
       .then(() => {
 
-        // init ansersArr
-        let answerAr = [];
-        this.props.questions.map(qustion => {
-          answerAr.push({ id: qustion._id, choosen: -1 })
-        });
-        console.log(answerAr)
-
-        this.setState({ questionAnswers: answerAr })
         // pagination items
         let items = [];
         // init pagination
         // get total pages
-        let total = Math.ceil(this.props.questions.length / 10);
+        let total = Math.ceil(this.props.categories.length / 10);
         for (let number = 1; number <= total; number++) {
           items.push(
             <Pagination.Item onClick={() => {
@@ -69,7 +60,7 @@ class QuestionsList extends Component {
         });
       })
       .catch(err => {
-        console.error(err.getMessage());
+        console.error(err);
       });
   }
 
@@ -80,27 +71,7 @@ class QuestionsList extends Component {
     });
   }
 
-  mapCategoryIdToName (id) {
-    console.log("1wwss " + id)
-    // console.log("1ss " + this.props.categories)
-    let name = "";
-    if(this.props.categories){
-      this.props.categories.map(category => {
-        console.log("1ss " + category._id)
-        if(category._id === id) {
-          name = category.name;
-        }
-      });
-    }
-    return name;
-  }
-
   handleAnswerOptionClick(isCorrect, id, index) {
-    if (isCorrect) {
-      this.setState({
-        score: this.state.score + 1,
-      })
-    }
 
     let objIndex = this.state.questionAnswers.findIndex(obj => obj.id === id);
     let quesArr = this.state.questionAnswers;
@@ -121,7 +92,7 @@ class QuestionsList extends Component {
 
   removeAllQuestions() {
     this.props
-      .deleteAllQuestions()
+      .deleteAllCategory()
       .then((response) => {
         console.log(response);
         this.refreshData();
@@ -139,9 +110,9 @@ class QuestionsList extends Component {
     this.setState({ show: false });
   }
 
-  removeQuestion() {
+  removeCategory() {
     this.props
-      .deleteQuestion(this.state.idToDelete)
+      .deleteCategory(this.state.idToDelete)
       .then (() => this.closeAlert())
       .catch((e) => {
         console.log(e);
@@ -155,28 +126,22 @@ class QuestionsList extends Component {
     const search = this.props.location.search;
     const page = new URLSearchParams(search).get("page");
 
-    const { questions } = this.props;
-    // console.log(questions)
+    const { categories } = this.props;
+    // console.log(categories)
     const hoursMinsSecs = { hours: 1, minutes: 20, seconds: 40 }
 
     return (
       <div>
         <Row className="justify-content-md-center">
           <Col md="auto mb-4">
-            <h4>Edit and delete Questions</h4>
+            <h4>Edit and delete Categories</h4>
           </Col>
         </Row>
         <Container>
-          {showScore ? (
-            <Button variant="primary">
-              You scored <Badge bg="secondary">{score}</Badge> out of <Badge bg="secondary">{questions.length}</Badge>
-              <span className="visually-hidden">unread messages</span>
-            </Button>
-          ) : (
             <>
               <Row className="mb-3">
                 <Col>
-                  <Button variant="primary"><span>There are {questions.length} questions</span> </Button>
+                  <Button variant="primary"><span>There are {categories.length} categories</span> </Button>
                 </Col>
                 <Col></Col><Col></Col>
                 <Col>
@@ -184,23 +149,15 @@ class QuestionsList extends Component {
                 </Col>
               </Row>
               <Row>
-                {questions && questions.slice(
+                {categories && categories.slice(
                   pageSize * (page - 1),
                   pageSize * (page - 1) + pageSize
-                ).map((question, index) => (
+                ).map((category, index) => (
                   <>
-                    <Col style={{ marginTop: "30px", minWidth: "400px", maxWidth: "400px" }}><span>No. {index + 1}: {question.description}{' '}</span>
-                    <br/>
-                    <Badge className="m-2" bg="secondary">{this.mapCategoryIdToName(question.category)}</Badge>
-                      {question.alternatives.map((answerOption, index) => (
-                        <ListGroup className="mb-1">
-                          <ListGroup.Item action active={this.state.questionAnswers.length > 0 && this.state.questionAnswers[this.state.questionAnswers.findIndex(obj => obj.id === question._id)].choosen === index} onClick={() => this.handleAnswerOptionClick(answerOption.isCorrect, question._id, index)}>
-                            {answerOption.text}
-                          </ListGroup.Item>
-                        </ListGroup>
-                      ))}
-                      <Button onClick={() => this.props.history.push("/question/edit/" + question._id)} variant="outline-warning">Edit</Button>{' '}
-                      <Button onClick={() => this.triggerAlert(question._id)} variant="outline-danger">Delete</Button>{' '}
+                    <Col style={{ marginTop: "30px", minWidth: "400px", maxWidth: "400px" }}><span>No. {index + 1}: {category.name}{' '}</span>
+
+                      <Button onClick={() => this.props.history.push("/Categoris/edit/" + category._id)} variant="outline-warning">Edit</Button>{' '}
+                      <Button onClick={() => this.triggerAlert(category._id)} variant="outline-danger">Delete</Button>{' '}
                     </Col>
                   </>
                 ))}
@@ -211,7 +168,7 @@ class QuestionsList extends Component {
                       confirmBtnText="Yes, delete it!"
                       confirmBtnBsStyle="danger"
                       title="Are you sure?"
-                      onConfirm={() => this.removeQuestion()}
+                      onConfirm={() => this.removeCategory()}
                       onCancel={this.closeAlert}
                       focusCancelBtn
                       show={show} 
@@ -249,7 +206,6 @@ class QuestionsList extends Component {
               ))}
             </Row> */}
             </>
-          )}
           <div className="mt-5 d-flex justify-content-center">
             <Pagination bsSize="medium">
               <Pagination.First />
@@ -267,10 +223,9 @@ class QuestionsList extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    questions: state.questions,
     categories: state.categories,
   };
 };
 
 
-export default connect(mapStateToProps, { retrieveQuestions, deleteAllQuestions, deleteQuestion, retrieveCategory })(QuestionsList);
+export default connect(mapStateToProps, { retrieveCategory, deleteAllCategory, deleteCategory })(CategoryList);

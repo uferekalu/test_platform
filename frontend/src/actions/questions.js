@@ -8,9 +8,9 @@ import {
   
   import QuestionDataService from "../services/question-service";
   
-  export const createQuestion = (description, alternatives) => async (dispatch) => {
+  export const createQuestion = (description, alternatives, category) => async (dispatch) => {
     try {
-      const res = await QuestionDataService.create({ description, alternatives });
+      const res = await QuestionDataService.create({ description, alternatives, category });
   
       dispatch({
         type: CREATE_QUESTION,

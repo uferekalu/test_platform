@@ -55,3 +55,7 @@
 .account-button-link:hover{
   color: white;
 }
+
+.mw-50 {
+  max-width: 50%;
+}
