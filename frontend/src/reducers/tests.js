@@ -19,14 +19,14 @@ import {
         return payload;
   
       case UPDATE_TEST:
-        return tests.map((question) => {
-          if (question._id === payload._id) {
+        return tests.map((test) => {
+          if (test._id === payload._id) {
             return {
-              ...question,
+              ...test,
               ...payload,
             };
           } else {
-            return question;
+            return test;
           }
         });
   

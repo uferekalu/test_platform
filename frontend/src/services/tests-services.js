@@ -10,7 +10,7 @@ class CategoriesDataService {
   }
 
   create(data) {
-    return http.post("/tests/submit", data);
+    return http.post("/test", data);
   }
   
   update(id, data) {

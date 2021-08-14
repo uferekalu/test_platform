@@ -22,6 +22,8 @@ import PrivateRoute from "./components/private-route/PrivateRoute";
 import Dashboard from "./components/Dashboard";
 import TestTab from "./components/interviewee-question";
 import CategoryCreat from "./components/categories";
+import TestsList from "./components/tests-list.component";
+import TestCreat from "./components/add-test.component";
 
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {
@@ -75,6 +77,12 @@ class App extends Component {
                         Add Category
                       </Link>
                     </NavDropdown.Item>
+                    <NavDropdown.Item>
+                      <Link to={"/test/add"} className="nav-link">
+                        Add Test
+                      </Link>
+                    </NavDropdown.Item>
+
                   </NavDropdown>
                 </Nav>
               </Navbar.Collapse>
@@ -97,6 +105,11 @@ class App extends Component {
                       Category list
                     </Link>
                   </NavDropdown.Item>
+                  <NavDropdown.Item>
+                    <Link to={"/tests"} className="nav-link">
+                      Test list
+                    </Link>
+                  </NavDropdown.Item>
                 </NavDropdown>
               </Nav>
             </Navbar.Collapse>
@@ -109,13 +122,16 @@ class App extends Component {
             <PrivateRoute exact path="/questions" component={QuestionsList} />
             <Route exact path="/add" component={AddQuestion} />
             <Route exact path="/question/edit/:id" component={AddQuestion} />
-            <Route path="/test" component={TestTab} />
-            <Route path="/question/:id" component={Question} />
+            <Route exact path="/test/edit/:id" component={TestCreat} />
+            <Route exact path="/test" component={TestTab} />
+            <Route exact path="/question/:id" component={Question} />
             <Route path="/register" component={Register} />
             <Route path="/login" component={Login} />
-            <Route path="/Category/add" component={CategoryCreat} />
+            <Route exact path="/Category/add" component={CategoryCreat} />
+            <Route exact path="/test/add" component={TestCreat} />
+            <Route exact path="/tests" component={TestsList} />
             <Route exact path="/Categoris" component={CategoryList} />
-            <Route path="/Categoris/edit/:id" component={CategoryCreat} />
+            <Route exact path="/Categoris/edit/:id" component={CategoryCreat} />
 
             <PrivateRoute exact path="/dashboard" component={Dashboard} />
           </Switch>
