@@ -344,6 +344,22 @@ router.get("/tests", async (req, res) => {
   }
 });
 
+//get a test
+router.get("/test/:id", async (req, res) => {
+  try {
+    const _id = req.params.id;
+
+    const test = await Test.findOne({ _id });
+    if (!test) {
+      return res.status(404).json({});
+    } else {
+      return res.status(200).json(test);
+    }
+  } catch (error) {
+    return res.status(500).json({ error: error });
+  }
+});
+
 // submit tests
 router.post("/tests/submit", async (req, res) => {
   try {
