@@ -19,5 +19,9 @@ export const UPDATE_TEST = "UPDATE_TEST";
 export const DELETE_TEST = "DELETE_TEST";
 export const DELETE_ALL_TESTS = "DELETE_ALL_TESTS";
 
+export const CREATE_RESULTS = "CREATE_RESULTS";
+export const RETRIEVE_RESULTS = "RETRIEVE_RESULTS";
+export const UPDATE_RESULT = "UPDATE_RESULT";
+
 
 

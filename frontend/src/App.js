@@ -24,6 +24,9 @@ import TestTab from "./components/interviewee-question";
 import CategoryCreat from "./components/categories";
 import TestsList from "./components/tests-list.component";
 import TestCreat from "./components/add-test.component";
+import ParticipantsList from "./components/participants-list.component";
+import ResultsList from "./components/results-list.component";
+import Results from "./components/result-details.component";
 
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {
@@ -58,6 +61,28 @@ class App extends Component {
               <Link to={"/test"} className="nav-link">
                 Take Test
               </Link>
+            </li>
+            <li className="nav-item">
+              <Navbar.Collapse id="navbar-dark-example">
+                <Nav>
+                  <NavDropdown
+                    id="nav-dropdown-dark-example"
+                    title="Results"
+                    menuVariant="dark"
+                  >
+                    <NavDropdown.Item>
+                      <Link to={"/participants"} className="nav-link">
+                        All Participants
+                      </Link>
+                    </NavDropdown.Item>
+                    <NavDropdown.Item>
+                      <Link to={"/results"} className="nav-link">
+                        Results List
+                      </Link>
+                    </NavDropdown.Item>
+                  </NavDropdown>
+                </Nav>
+              </Navbar.Collapse>
             </li>
             <li className="nav-item">
               <Navbar.Collapse id="navbar-dark-example">
@@ -132,6 +157,9 @@ class App extends Component {
             <Route exact path="/tests" component={TestsList} />
             <Route exact path="/Categoris" component={CategoryList} />
             <Route exact path="/Categoris/edit/:id" component={CategoryCreat} />
+            <Route exact path="/participants" component={ParticipantsList} />
+            <Route exact path="/results" component={ResultsList} />
+            <Route exact path="/results/:id" component={Results} />
 
             <PrivateRoute exact path="/dashboard" component={Dashboard} />
           </Switch>

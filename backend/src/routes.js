@@ -5,6 +5,7 @@ const Category = require("./models/Category");
 const Test = require("./models/Test");
 const Result = require("./models/Results");
 const jwt = require("jsonwebtoken");
+const Results = require("./models/Results");
 
 // get all questions
 router.get("/questions", async (req, res) => {
@@ -360,8 +361,25 @@ router.get("/test/:id", async (req, res) => {
   }
 });
 
+// delete one category
+router.delete("/test/:id", async (req, res) => {
+  try {
+    const _id = req.params.id;
+
+    const category = await Test.deleteOne({ _id });
+
+    if (category.deletedCount === 0) {
+      return res.status(404).json({ status: "failed" });
+    } else {
+      return res.status(204).json({ status: "success" });
+    }
+  } catch (error) {
+    return res.status(500).json({ error: error });
+  }
+});
+
 // submit tests
-router.post("/tests/submit", async (req, res) => {
+router.post("/results/submit", async (req, res) => {
   try {
     const { test, answers, passPercentage = 75, attempt } = req.body;
     const { authorization } = req.headers;
@@ -404,23 +422,32 @@ router.post("/tests/submit", async (req, res) => {
   }
 });
 
+// get all results
+router.get("/results", async (req, res) => {
+  try {
+    const results = await Results.find();
+    return res.status(200).json(results);
+  } catch (error) {
+    return res.status(500).json({ error: error });
+  }
+});
 
-// delete one category
-router.delete("/test/:id", async (req, res) => {
+// get a result
+router.get("/result/:id", async (req, res) => {
   try {
     const _id = req.params.id;
 
-    const category = await Test.deleteOne({ _id });
-
-    if (category.deletedCount === 0) {
-      return res.status(404).json({ status: "failed" });
+    const result = await Results.findOne({ _id });
+    if (!result) {
+      return res.status(404).json({});
     } else {
-      return res.status(204).json({ status: "success" });
+      return res.status(200).json(result);
     }
   } catch (error) {
     return res.status(500).json({ error: error });
   }
 });
+
 // this one is just a test
 router.get("/", (req, res) => {
   res.send("HEll0 W0RlD");

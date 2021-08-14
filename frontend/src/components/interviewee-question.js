@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { retrieveQuestions, deleteAllQuestions, simpleUpdateQuestion, deleteQuestion } from "../actions/questions";
+import { submitResult } from "../actions/authActions";
+
 import CountDown from './countdown'
 import { Container, Row, Col, Button, Badge, ListGroup, Pagination } from 'react-bootstrap';
 
@@ -113,6 +115,10 @@ class TestTab extends Component {
       }
       else { // submit action
         this.setState({showScore: true})
+        // send submit
+        this.props.submitResult({ test: this.state , answers: this.state , passPercentage: this.state , attempt: this.state , })
+        // add attempts
+
       }
   }
 
@@ -180,8 +186,9 @@ class TestTab extends Component {
 const mapStateToProps = (state) => {
   return {
     questions: state.questions,
+    auth: state.auth,
   };
 };
 
 
-export default connect(mapStateToProps, { retrieveQuestions, deleteAllQuestions, deleteQuestion })(TestTab);
+export default connect(mapStateToProps, { submitResult, retrieveQuestions, deleteAllQuestions, deleteQuestion })(TestTab);

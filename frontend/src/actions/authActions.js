@@ -3,6 +3,7 @@ import setAuthToken from "../utils/setAuthToken";
 import jwt_decode from "jwt-decode";
 
 import QuestionDataService from "../services/question-service";
+import TestsDataService from "../services/tests-services";
 
 import {
   GET_ERRORS,
@@ -13,15 +14,15 @@ import {
 // Register User
 export const registerUser = (userData, history) => async dispatch => {
   try {
-      const res = await QuestionDataService.register(userData);
-      if (res) {
-        history.push("/login")
-      }
+    const res = await QuestionDataService.register(userData);
+    if (res) {
+      history.push("/login")
+    }
   } catch (err) {
-        dispatch({
-          type: GET_ERRORS,
-          payload: err.response.data
-      })
+    dispatch({
+      type: GET_ERRORS,
+      payload: err.response.data
+    })
 
   }
   // axios
@@ -38,22 +39,45 @@ export const registerUser = (userData, history) => async dispatch => {
 // Login - get user token
 export const loginUser = userData => async dispatch => {
   try {
-      const res = await QuestionDataService.login(userData);
-        // Save to localStorage
-      // Set token to localStorage
-        const { token } = res.data;
-        localStorage.setItem("jwtToken", token);
-        // Set token to Auth header
-        setAuthToken(token);
-        // Decode token to get user data
-        const decoded = jwt_decode(token);
-        // Set current user
-        dispatch(setCurrentUser(decoded));
+    const res = await QuestionDataService.login(userData);
+    // Save to localStorage
+    // Set token to localStorage
+    const { token } = res.data;
+    localStorage.setItem("jwtToken", token);
+    // Set token to Auth header
+    setAuthToken(token);
+    // Decode token to get user data
+    const decoded = jwt_decode(token);
+    // Set current user
+    dispatch(setCurrentUser(decoded));
   } catch (err) {
-        dispatch({
-          type: GET_ERRORS,
-          payload: err.response.data
-      })
+    dispatch({
+      type: GET_ERRORS,
+      payload: err.response.data
+    })
+
+  }
+};
+
+export const submitResult = resultData => async dispatch => {
+  try {
+    const res = await TestsDataService.submit(resultData);
+    // Save to localStorage
+    // Set token to localStorage
+    const { token } = res.data;
+    localStorage.setItem("jwtToken", token);
+    // Set token to Auth header
+    setAuthToken(token);
+    // Decode token to get user data
+    const decoded = jwt_decode(token);
+    decoded.attempt = decoded.attempt + 1;
+    // Set current user
+    dispatch(setCurrentUser(decoded));
+  } catch (err) {
+    dispatch({
+      type: GET_ERRORS,
+      payload: err.response.data
+    })
 
   }
 };

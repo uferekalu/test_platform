@@ -1,6 +1,6 @@
 import http from "../http-common";
 
-class CategoriesDataService {
+class TestsDataService {
   getAll() {
     return http.get("/tests");
   }
@@ -12,6 +12,10 @@ class CategoriesDataService {
   create(data) {
     return http.post("/test", data);
   }
+
+  submit(data) {
+    return http.post("/result/submit", data);
+  }
   
   update(id, data) {
     return http.put(`/test/${id}`, data);
@@ -22,4 +26,4 @@ class CategoriesDataService {
   }
 }
 
-export default new CategoriesDataService();
+export default new TestsDataService();

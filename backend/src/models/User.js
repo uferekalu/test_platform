@@ -13,6 +13,9 @@ const UserSchema = new Schema({
   password: {
     type: String,
     required: true
+  },
+  currentAssignedTest: {
+    type: String,
   }
 }, {timestamps: true});
 module.exports = User = mongoose.model("users", UserSchema);
