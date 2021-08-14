@@ -21,5 +21,3 @@ export const DELETE_ALL_TESTS = "DELETE_ALL_TESTS";
 
 
 
-
-

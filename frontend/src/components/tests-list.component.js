@@ -13,7 +13,8 @@ class TestList extends Component {
     this.removeAllQuestions = this.removeAllQuestions.bind(this);
     this.triggerAlert = this.triggerAlert.bind(this);
     this.closeAlert = this.closeAlert.bind(this);
-
+    this.mapCategoryIdToName = this.mapCategoryIdToName.bind(this);
+    
     this.state = {
       currentQuestion: 0,
       currentIndex: -1,
@@ -27,6 +28,20 @@ class TestList extends Component {
       items: [],
       idToDelete:0,
     };
+  }
+  mapCategoryIdToName (id) {
+    console.log("1wwss " + id)
+    // console.log("1ss " + this.props.categories)
+    let name = "";
+    if(this.props.categories){
+      this.props.categories.map(category => {
+        console.log("1ss " + category._id)
+        if(category._id === id) {
+          name = category.name;
+        }
+      });
+    }
+    return name;
   }
 
   componentDidMount() {
@@ -131,7 +146,10 @@ class TestList extends Component {
                   pageSize * (page - 1) + pageSize
                 ).map((Test, index) => (
                   <>
-                    <Col style={{ marginTop: "30px", minWidth: "400px", maxWidth: "400px" }}><span>No. {index + 1}: {Test.name}{' '}</span>
+                    <Col style={{ marginTop: "30px", minWidth: "400px", maxWidth: "400px" }}><span>No. {index + 1}: {Test.name}{' '}
+                    <Badge className="m-2" bg="secondary">{this.mapCategoryIdToName(Test.category)}</Badge>
+                    </span>
+                    <br/>
 
                       <Button onClick={() => this.props.history.push("/test/edit/" + Test._id)} variant="outline-warning">Edit</Button>{' '}
                       <Button onClick={() => this.triggerAlert(Test._id)} variant="outline-danger">Delete</Button>{' '}
@@ -171,7 +189,7 @@ class TestList extends Component {
 const mapStateToProps = (state) => {
   return {
     tests: state.tests,
-    tests: state.tests,
+    categories: state.categories,
   };
 };
 
