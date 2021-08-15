@@ -73,7 +73,7 @@ router.post("/login", (req, res) => {
         // User matched
         // get number of attempts
         let id = user.id;
-        const ResultsAttempt = await Results.findOne({ user: id });
+        const ResultsAttempt = await Results.findOne({ user: id }).sort({ field: 'asc', _id: -1 }).limit(1); //get latest result
         console.log(ResultsAttempt)
         // Create JWT Payload
         const payload = {

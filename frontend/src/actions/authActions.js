@@ -48,6 +48,8 @@ export const loginUser = userData => async dispatch => {
     setAuthToken(token);
     // Decode token to get user data
     const decoded = jwt_decode(token);
+    // console.log(decoded)
+
     // Set current user
     dispatch(setCurrentUser(decoded));
   } catch (err) {
@@ -59,24 +61,24 @@ export const loginUser = userData => async dispatch => {
   }
 };
 
-export const submitResult = resultData => async dispatch => {
+export const submitResult = resultData => async (dispatch, getState) => {
   try {
     const res = await TestsDataService.submit(resultData);
     // Save to localStorage
     // Set token to localStorage
-    const { token } = res.data;
-    localStorage.setItem("jwtToken", token);
+    // const { token } = res.data;
+    // localStorage.setItem("jwtToken", token);
     // Set token to Auth header
-    setAuthToken(token);
+    // setAuthToken(token);
     // Decode token to get user data
-    const decoded = jwt_decode(token);
-    decoded.attempt = decoded.attempt + 1;
+    // const decoded = jwt_decode(token);
+    // decoded.attempt = decoded.attempt + 1;
     // Set current user
-    dispatch(setCurrentUser(decoded));
+    // dispatch(setCurrentUser(decoded));
   } catch (err) {
     dispatch({
       type: GET_ERRORS,
-      payload: err.response.data
+      payload: err
     })
 
   }

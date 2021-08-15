@@ -41,6 +41,8 @@ class TestTab extends Component {
 
   componentDidMount() {
     console.log(this.props.auth)
+    console.log(this.props.auth.user.attempt)
+    
     let currentAssignedTest = this.props.auth.user.currentAssignedTest ? this.props.auth.user.currentAssignedTest : localStorage.getItem('currentAssignedTest');
     localStorage.setItem('currentAssignedTest', currentAssignedTest);
 
@@ -167,10 +169,11 @@ class TestTab extends Component {
     else { // submit action
       this.setState({ showScore: true })
       // send submit
-      this.props.submitResult({ test: localStorage.getItem("currentAssignedTest"),
+      this.props.submitResult({ 
+      test: localStorage.getItem("currentAssignedTest"),
       answers: this.state.answerAr,
       passPercentage: localStorage.getItem('passPercentage'), 
-      attempt: localStorage.getItem('attempt') + 1, });
+      attempt: parseInt(localStorage.getItem('attempt')) + 1, });
       // add attempts
     }
     localStorage.setItem("answerAr", JSON.stringify(this.state.answerAr));
