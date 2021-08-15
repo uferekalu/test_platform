@@ -63,7 +63,11 @@ class App extends Component {
           <div className="navbar-nav mr-auto">
             {this.props.auth.isAuthenticated && (
                 <li className="nav-item">
-                  <Link to={"/test"} className="nav-link">
+                  <Link to={"/test"} onClick={() => {
+                    localStorage.setItem("questionNumber", "1");
+                    localStorage.setItem("answerAr", "");
+                  }} 
+                  className="nav-link">
                     Take Test
                   </Link>
                 </li>

@@ -80,7 +80,7 @@ router.post("/login", (req, res) => {
           id: user.id,
           name: user.name,
           currentAssignedTest: user.currentAssignedTest ? user.currentAssignedTest : null,
-          attempt: ResultsAttempt ? ResultsAttempt : 0,
+          attempt: ResultsAttempt.attempt ? ResultsAttempt.attempt : 0,
           isAdmin: user.isAdmin
         };
         // Sign token

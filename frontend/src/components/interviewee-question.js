@@ -25,7 +25,7 @@ class TestTab extends Component {
       currentQuestion: 0,
       currentIndex: -1,
       showScore: false,
-      count: 1,
+      count: localStorage.getItem("questionNumber") && localStorage.getItem("questionNumber").length ?  localStorage.getItem("questionNumber") :  1,
       score: 0,
       active: false,
       currentAns: false,
@@ -33,13 +33,14 @@ class TestTab extends Component {
       total: 0,
       lastQuestion: false,
       questionAnswers: [],
+      answerAr: localStorage.getItem("answerAr") && localStorage.getItem("answerAr").length > 0 ? JSON.parse(localStorage.getItem("answerAr")) : [],
       questions: [],
       items: [],
     };
   }
 
   componentDidMount() {
-    // console.log(this.props.auth)
+    console.log(this.props.auth)
     let currentAssignedTest = this.props.auth.user.currentAssignedTest ? this.props.auth.user.currentAssignedTest : localStorage.getItem('currentAssignedTest');
     localStorage.setItem('currentAssignedTest', currentAssignedTest);
 
@@ -58,12 +59,13 @@ class TestTab extends Component {
           // this.setState({ questions: questionList });
           this.props.userUpdateQuestion(response.data.questions);
           localStorage.setItem('currentAssignedTest', currentAssignedTest);
+          localStorage.setItem('passPercentage', response.data.passPercentage);
+          localStorage.setItem('attempt', this.props.auth.user.attempt);
+          if (localStorage.getItem("questionNumber") && localStorage.getItem("questionNumber") == response.data.questions.length) {
+            this.setState({ lastQuestion: true });
+          }    
         })
     }
-  }
-
-  mapTestToName = (tests, id) => {
-
   }
 
   refreshData() {
@@ -82,11 +84,11 @@ class TestTab extends Component {
     if (questionNumber) {
       testData.questionNumber = questionNumber;
     }
-    if (previousAnswers) {
-      testData.previousAnswers = previousAnswers;
-    }
+    localStorage.setItem('testData', JSON.parse(testData));
+
   }
-  handleAnswerOptionClick(isCorrect, id, index) {
+
+  handleAnswerOptionClick(isCorrect, id, index, questionIndex, description) {
 
     this.setState({ currentAns: isCorrect });
     let objIndex = this.state.questionAnswers.findIndex(obj => obj.id === id);
@@ -99,6 +101,25 @@ class TestTab extends Component {
     let btnTickIcon = document.getElementById(`questionTicker-${id}`)
     btnTickIcon.classList.add("d-block")
     btnTickIcon.classList.remove("d-none")
+
+    // add to answer array
+    let answerAr = this.state.answerAr;
+    if(questionIndex !== this.state.answerAr.length - 1){
+      answerAr.push({
+        questionId: id,
+        answer: description,
+        isCorrect,
+        timeTaken: localStorage.getItem("hours")+":" + localStorage.getItem("minutes")+":"+localStorage.getItem("seconds"),
+      });
+
+      this.setState({answerAr});        
+    }
+    else {
+      answerAr[questionIndex].answer = description;
+      answerAr[questionIndex].isCorrect = isCorrect;
+      this.setState({answerAr});
+    }
+
   }
 
   setActiveQuestion(question, index) {
@@ -136,6 +157,7 @@ class TestTab extends Component {
       let currentCount = this.state.count;
       currentCount++;
       this.setState({ count: currentCount });
+      localStorage.setItem("questionNumber", currentCount);
       console.log(currentCount + " " + this.props.questions.length)
       if (currentCount === this.props.questions.length) {
         this.setState({ lastQuestion: true });
@@ -145,10 +167,13 @@ class TestTab extends Component {
     else { // submit action
       this.setState({ showScore: true })
       // send submit
-      this.props.submitResult({ test: this.state, answers: this.state, passPercentage: this.state, attempt: this.state, })
+      this.props.submitResult({ test: localStorage.getItem("currentAssignedTest"),
+      answers: this.state.answerAr,
+      passPercentage: localStorage.getItem('passPercentage'), 
+      attempt: localStorage.getItem('attempt') + 1, });
       // add attempts
-
     }
+    localStorage.setItem("answerAr", JSON.stringify(this.state.answerAr));
   }
 
 
@@ -158,9 +183,9 @@ class TestTab extends Component {
     const search = this.props.location.search;
 
     const { questions } = this.props;
-    console.log(questions);
+    // console.log(questions);
     // console.log(questions)
-    const hoursMinsSecs = { hours: 0, minutes: 0, seconds: 30 };
+    const hoursMinsSecs = { hours: localStorage.getItem("hours"), minutes: localStorage.getItem("minutes"), seconds: localStorage.getItem("seconds") };
 
     return (
       <div>
@@ -204,7 +229,7 @@ class TestTab extends Component {
                       <Col></Col>
                       <Col>
                         <Button variant="secondary">
-                          <CountDown hoursMinsSecs={hoursMinsSecs} />{" "}
+                          <CountDown saveTestDataTolocalStorage={this.saveTestDataTolocalStorage} hoursMinsSecs={hoursMinsSecs} />{" "}
                         </Button>
                       </Col>
                       <Col></Col>
@@ -255,7 +280,9 @@ class TestTab extends Component {
                                         this.handleAnswerOptionClick(
                                           answerOption.isCorrect,
                                           questions[count - 1]._id,
-                                          index
+                                          index,
+                                          count - 1,
+                                          questions[count - 1].description,
                                         )
                                       }
                                     >

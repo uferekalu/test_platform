@@ -24,7 +24,7 @@ const ResultsSchema = new mongoose.Schema({
                 required: true
             },
             timeTaken: {
-                type: Number,
+                type: String,
                 required: true
             }
         }

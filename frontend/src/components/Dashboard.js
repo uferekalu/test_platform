@@ -16,29 +16,33 @@ class Dashboard extends Component {
     const { user } = this.props.auth;
 
     return (
-        <Container>
-                <Row className="justify-content-md-center mt-5">
-                    <Col className="welcome mb-4"><h4>
-                        <b>Welcome,</b> {user.name.split(" ")[0]}
-                            <p className="flow-text grey-text text-darken-1">
-                                You are logged into the{" "}
-                                <span style={{ fontFamily: "monospace" }}>ASSESSMENT</span> platform 👏
-                            </p>
-                        </h4>
-                    </Col>
-                    
-                    <Button type="submit" variant="primary" className="mb-4">
-                        <Link to="/test" className="account-button-link w-100 ">
-                            Start Test
-                        </Link>
-                    </Button>
-                    <Button variant="primary" className="mb-4" onClick={this.onLogoutClick}>
-                        Logout
-                    </Button>
-                </Row>
-                <Row className="action-but mt-5">
-                </Row>
-        </Container>
+      <Container>
+        <Row className="justify-content-md-center mt-5">
+          <Col className="welcome mb-4"><h4>
+            <b>Welcome,</b> {user.name.split(" ")[0]}
+            <p className="flow-text grey-text text-darken-1">
+              You are logged into the{" "}
+              <span style={{ fontFamily: "monospace" }}>ASSESSMENT</span> platform 👏
+            </p>
+          </h4>
+          </Col>
+
+          <Button type="submit" variant="primary" className="mb-4">
+            <Link to="/test" onClick={() => {
+              localStorage.setItem("questionNumber", "1");
+              localStorage.setItem("answerAr", "");
+            }}
+              className="account-button-link w-100 ">
+              Start Test
+            </Link>
+          </Button>
+          <Button variant="primary" className="mb-4" onClick={this.onLogoutClick}>
+            Logout
+          </Button>
+        </Row>
+        <Row className="action-but mt-5">
+        </Row>
+      </Container>
     );
   }
 }

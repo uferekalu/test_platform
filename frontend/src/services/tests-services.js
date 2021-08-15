@@ -14,7 +14,7 @@ class TestsDataService {
   }
 
   submit(data) {
-    return http.post("/result/submit", data);
+    return http.post("/results/submit", data);
   }
   
   update(id, data) {
