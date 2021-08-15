@@ -48,7 +48,7 @@ export const loginUser = userData => async dispatch => {
     setAuthToken(token);
     // Decode token to get user data
     const decoded = jwt_decode(token);
-    // console.log(decoded)
+    console.log(decoded)
 
     // Set current user
     dispatch(setCurrentUser(decoded));
@@ -64,6 +64,8 @@ export const loginUser = userData => async dispatch => {
 export const submitResult = resultData => async (dispatch, getState) => {
   try {
     const res = await TestsDataService.submit(resultData);
+    let authtemp = getState().auth;
+    authtemp.attempt = authtemp.attempt + 1;
     // Save to localStorage
     // Set token to localStorage
     // const { token } = res.data;
@@ -74,7 +76,7 @@ export const submitResult = resultData => async (dispatch, getState) => {
     // const decoded = jwt_decode(token);
     // decoded.attempt = decoded.attempt + 1;
     // Set current user
-    // dispatch(setCurrentUser(decoded));
+    dispatch(setCurrentUser(authtemp));
   } catch (err) {
     dispatch({
       type: GET_ERRORS,
