@@ -1,9 +1,23 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import { retrieveQuestions, deleteAllQuestions, simpleUpdateQuestion, deleteQuestion } from "../actions/questions";
-import CountDown from './countdown'
-import { Container, Row, Col, Button, Badge, ListGroup, Pagination } from 'react-bootstrap';
+import {
+  retrieveQuestions,
+  deleteAllQuestions,
+  simpleUpdateQuestion,
+  deleteQuestion,
+} from "../actions/questions";
+import CountDown from "./countdown";
+import {
+  Container,
+  Row,
+  Col,
+  Button,
+  Badge,
+  ListGroup,
+  Pagination,
+  Form,
+} from "react-bootstrap";
 
 
 class TestTab extends Component {
@@ -14,7 +28,7 @@ class TestTab extends Component {
     this.removeAllQuestions = this.removeAllQuestions.bind(this);
     this.removeQuestion = this.removeQuestion.bind(this);
     this.nextQuestion = this.nextQuestion.bind(this);
-    
+
     this.state = {
       currentQuestion: 0,
       currentIndex: -1,
@@ -32,21 +46,20 @@ class TestTab extends Component {
   }
 
   componentDidMount() {
-
-    this.props.retrieveQuestions()
+    this.props
+      .retrieveQuestions()
       .then(() => {
-
         // init ansersArr
         let answerAr = [];
-        this.props.questions.map(qustion => {
-          answerAr.push({id: qustion._id, choosen: -1})
+        this.props.questions.map((qustion) => {
+          answerAr.push({ id: qustion._id, choosen: -1 });
         });
-        console.log(answerAr)
+        console.log("this is answer array", answerAr);
 
-        this.setState({questionAnswers: answerAr});
+        this.setState({ questionAnswers: answerAr });
         // CountDown.reset();
       })
-      .catch(err => {
+      .catch((err) => {
         console.error(err.getMessage());
       });
   }
@@ -59,13 +72,15 @@ class TestTab extends Component {
   }
 
   handleAnswerOptionClick(isCorrect, id, index) {
-
-    this.setState({currentAns: isCorrect});
-    let objIndex = this.state.questionAnswers.findIndex(obj => obj.id === id);
+    this.setState({ currentAns: isCorrect });
+    let btnTickIcon = document.getElementById(`questionTicker-${id}`)
+    btnTickIcon.classList.add("d-block")
+    btnTickIcon.classList.remove("d-none")
+    let objIndex = this.state.questionAnswers.findIndex((obj) => obj.id === id); // 0, 1, 2
     let quesArr = this.state.questionAnswers;
     quesArr[objIndex].choosen = index;
     this.setState({
-      questionAnswers : quesArr
+      questionAnswers: quesArr,
     });
   }
 
@@ -89,32 +104,31 @@ class TestTab extends Component {
   }
 
   removeQuestion(id) {
-    this.props
-      .deleteQuestion(id)
-      .catch((e) => {
-        console.log(e);
-      });
+    this.props.deleteQuestion(id).catch((e) => {
+      console.log(e);
+    });
   }
 
   nextQuestion() {
     if (this.state.currentAns) {
-        this.setState({
-          score: this.state.score + 1,
-        })
+      this.setState({
+        score: this.state.score + 1,
+      });
+    }
+    if (!this.state.lastQuestion) {
+      let currentCount = this.state.count;
+      currentCount++;
+      this.setState({ count: currentCount });
+      if (currentCount === this.props.questions.length) {
+        this.setState({ lastQuestion: true });
       }
-      if(!this.state.lastQuestion){
-        let currentCount = this.state.count;
-        currentCount++;
-        this.setState({count: currentCount});
-        if(currentCount === this.props.questions.length){
-            this.setState({lastQuestion: true});
-        }
-        document.getElementById('countDown').click();    
-      }
-      else { // submit action
-        this.setState({showScore: true})
-      }
+      document.getElementById("countDown").click();
+    } else {
+      // submit action
+      this.setState({ showScore: true });
+    }
   }
+  
 
   render() {
     const { showScore, score, count, lastQuestion } = this.state;
@@ -123,57 +137,149 @@ class TestTab extends Component {
     const page = new URLSearchParams(search).get("page");
 
     const { questions } = this.props;
+    console.log(questions);
     // console.log(questions)
-    const hoursMinsSecs = { hours: 0, minutes: 0, seconds: 30 }
+    const hoursMinsSecs = { hours: 0, minutes: 0, seconds: 30 };
 
     return (
       <div>
         <Row className="justify-content-md-center">
           <Col md="auto mb-4">
-            <h4>{!showScore ? "Instruction: You have 30 sec to solve the question and go to the next one!" : "Congrats, You finished your test!"}</h4>
+            <h4>
+              {!showScore
+                ? "Instruction: You have 30 sec to solve the question and go to the next one!"
+                : "Congrats, You finished your test!"}
+            </h4>
           </Col>
         </Row>
         <Container>
           {showScore ? (
             <Button variant="primary">
-              You scored <Badge bg="secondary">{score}</Badge> out of <Badge bg="secondary">{questions.length}</Badge>
+              You scored <Badge bg="secondary">{score}</Badge> out of{" "}
+              <Badge bg="secondary">{questions.length}</Badge>
               <span className="visually-hidden">unread messages</span>
             </Button>
           ) : (
             <>
               <Row className="mb-3">
                 <Col>
-                  <Button variant="primary"><span>Question {count} from {questions.length} questions</span> </Button>
+                  <Button variant="primary">
+                    <span>
+                      Question {count} from {questions.length} questions
+                    </span>{" "}
+                  </Button>
                 </Col>
-                <Col></Col><Col>
-                <Button variant="secondary"><CountDown hoursMinsSecs={hoursMinsSecs} />  </Button>
-                </Col>
-                <Col></Col> 
+                <Col></Col>
                 <Col>
-                  <Button id="nexQuestion" style={{color: "white", display: {}}} color="white" onClick={this.nextQuestion} variant="info">{!lastQuestion ? "Next Question >" : "submit"} </Button>{' '}
+                  <Button variant="secondary">
+                    <CountDown hoursMinsSecs={hoursMinsSecs} />{" "}
+                  </Button>
+                </Col>
+                <Col></Col>
+                <Col>
+                  <Button
+                    id="nexQuestion"
+                    style={{ color: "white", display: {} }}
+                    color="white"
+                    onClick={this.nextQuestion}
+                    variant="info"
+                  >
+                    {!lastQuestion ? "Next Question >" : "submit"}{" "}
+                  </Button>{" "}
                 </Col>
               </Row>
               <Row className=" justify-content-center">
-                { questions[count-1] &&
+                {questions[count - 1] && (
                   <>
-                    <div style={{ marginTop: "30px", minWidth: "400px", maxWidth: "700px" }}><span>No. {count}: {questions.length > 0 ? questions[count-1].description : ""}{' '}</span>
-                      {questions.length > 0 && questions[count-1].alternatives.map((answerOption, index) => (
-                        <ListGroup className="mb-1">
-                          <ListGroup.Item action  active={this.state.questionAnswers.length > 0 && this.state.questionAnswers[this.state.questionAnswers.findIndex(obj => obj.id === questions[count-1]._id)].choosen === index} onClick={() => this.handleAnswerOptionClick(answerOption.isCorrect, questions[count-1]._id, index)}>
-                            {answerOption.text}
-                          </ListGroup.Item>
-                        </ListGroup>
+                    <div
+                      style={{
+                        marginTop: "30px",
+                        minWidth: "400px",
+                        maxWidth: "700px",
+                      }}
+                    >
+                      <span>
+                        No. {count}:{" "}
+                        {questions.length > 0
+                          ? questions[count - 1].description
+                          : ""}{" "}
+                      </span>
+                      {questions.length > 0 &&
+                        questions[count - 1].alternatives.map(
+                          (answerOption, index) => (
+                            <ListGroup className="mb-1">
+                              <ListGroup.Item
+                                action
+                                active={
+                                  this.state.questionAnswers.length > 0 &&
+                                  this.state.questionAnswers[
+                                    this.state.questionAnswers.findIndex(
+                                      (obj) =>
+                                        obj.id === questions[count - 1]._id
+                                    )
+                                  ].choosen === index
+                                }
+                                onClick={() =>
+                                  this.handleAnswerOptionClick(
+                                    answerOption.isCorrect,
+                                    questions[count - 1]._id,
+                                    index
+                                  )
+                                }
+                              >
+                                {answerOption.text}
+                              </ListGroup.Item>
+                            </ListGroup>
+                          )
+                        )}
+                    </div>
+                    <div
+                      style={{
+                        minWidth: "150px",
+                        maxWidth: "200px",
+                        marginLeft: "100px"
+                      }}
+                    >
+                      {questions.map((question, index) => (
+                        <>
+                          <ListGroup className="mb-1">
+                            <ListGroup.Item className="ml-5" key={index}>
+                            <Row>
+                              <Col md="2" className="mt-1">
+                                  <i id={`questionTicker-${question._id}`}
+                                    className="far fa-check-circle d-none" 
+                                    style={{ marginRight: "6px", color: "green"}}
+                                    >
+                                  </i>
+                              </Col>
+                              <Col md="10">
+                                  Question No {index + 1}
+                              </Col>
+                            </Row>
+                            </ListGroup.Item>
+                          </ListGroup>
+                        </>
                       ))}
                     </div>
-
                   </>
-                }
+                )}
               </Row>
+              {/* <Row>
+                <div>
+                  {questions.map((question, index) => (
+                      <ListGroup className="mb-1">
+                        <ListGroup.Item>
+                          Question No {index + 1}
+                        </ListGroup.Item>
+                      </ListGroup>
+                  ))}
+                </div>
+              </Row> */}
             </>
           )}
         </Container>
       </div>
-    )
+    );
   }
 }
 
@@ -183,5 +289,8 @@ const mapStateToProps = (state) => {
   };
 };
 
-
-export default connect(mapStateToProps, { retrieveQuestions, deleteAllQuestions, deleteQuestion })(TestTab);
+export default connect(mapStateToProps, {
+  retrieveQuestions,
+  deleteAllQuestions,
+  deleteQuestion,
+})(TestTab);
