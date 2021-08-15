@@ -74,13 +74,13 @@ router.post("/login", (req, res) => {
         // get number of attempts
         let id = user.id;
         const ResultsAttempt = await Results.findOne({ user: id }).sort({ field: 'asc', _id: -1 }).limit(1); //get latest result
-        console.log(ResultsAttempt)
+        // console.log(ResultsAttempt)
         // Create JWT Payload
         const payload = {
           id: user.id,
           name: user.name,
           currentAssignedTest: user.currentAssignedTest ? user.currentAssignedTest : null,
-          attempt: ResultsAttempt.attempt ? ResultsAttempt.attempt : 0,
+          attempt: ResultsAttempt ? ResultsAttempt.attempt : 0,
           isAdmin: user.isAdmin
         };
         // Sign token

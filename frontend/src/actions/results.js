@@ -4,7 +4,7 @@ import {
     UPDATE_RESULT,
   } from "./types";
   
-  import ResultsDataService from "../services/categories-services";
+  import ResultsDataService from "../services/results-service";
   
   export const retrieveResult = () => async (dispatch) => {
     try {
