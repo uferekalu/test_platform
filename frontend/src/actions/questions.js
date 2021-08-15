@@ -3,7 +3,8 @@ import {
     RETRIEVE_QUESTIONS,
     UPDATE_QUESTION,
     DELETE_QUESTION,
-    DELETE_ALL_QUESTIONS
+    DELETE_ALL_QUESTIONS,
+    USER_UPDATE_QUESTION
   } from "./types";
   
   import QuestionDataService from "../services/question-service";
@@ -97,3 +98,12 @@ import {
       payload
     }
   }
+
+  export const userUpdateQuestion = (payload) => {
+    return {
+      type: USER_UPDATE_QUESTION,
+      payload
+    }
+  }
+
+  

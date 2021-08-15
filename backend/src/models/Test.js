@@ -7,9 +7,9 @@ const TestSchema = new mongoose.Schema({
         ref: 'Category',
     },
     name: String,//React, BA
-    questions: {
-        type: Array
-    },//["6e3ete6t4ett4", "6et6tet64te64"],
+    questions: [
+        {type:mongoose.Schema.Types.ObjectId,ref: 'Question'}   
+    ],//["6e3ete6t4ett4", "6et6tet64te64"],
     passPercentage: {
         type: Number,
         required: true,

@@ -16,6 +16,11 @@ const UserSchema = new Schema({
   },
   currentAssignedTest: {
     type: String,
-  }
+  },
+  isAdmin: {
+    type: Boolean,
+    required: true,
+    default: false,
+  },
 }, {timestamps: true});
 module.exports = User = mongoose.model("users", UserSchema);

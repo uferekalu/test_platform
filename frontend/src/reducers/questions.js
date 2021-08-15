@@ -1,6 +1,7 @@
 import {
     CREATE_QUESTION,
     RETRIEVE_QUESTIONS,
+    USER_UPDATE_QUESTION,
     UPDATE_QUESTION,
     DELETE_QUESTION,
     DELETE_ALL_QUESTIONS
@@ -29,6 +30,9 @@ import {
             return question;
           }
         });
+
+        case USER_UPDATE_QUESTION:
+          return payload;
   
       case DELETE_QUESTION:
         return questions.filter(({ _id }) => _id !== payload.id);

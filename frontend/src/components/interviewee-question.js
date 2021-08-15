@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import { retrieveQuestions, deleteAllQuestions, simpleUpdateQuestion, deleteQuestion } from "../actions/questions";
+import { retrieveQuestions, deleteAllQuestions, userUpdateQuestion, deleteQuestion } from "../actions/questions";
 import { submitResult } from "../actions/authActions";
 import { retrieveTest } from "../actions/tests";
 import TestsDataService from "../services/tests-services";
@@ -39,7 +39,8 @@ class TestTab extends Component {
   }
 
   componentDidMount() {
-    let currentAssignedTest = this.props.auth.currentAssignedTest ? this.props.auth.currentAssignedTest : localStorage.getItem('currentAssignedTest');
+    // console.log(this.props.auth)
+    let currentAssignedTest = this.props.auth.user.currentAssignedTest ? this.props.auth.user.currentAssignedTest : localStorage.getItem('currentAssignedTest');
     localStorage.setItem('currentAssignedTest', currentAssignedTest);
 
     if (!currentAssignedTest) {
@@ -47,29 +48,17 @@ class TestTab extends Component {
     }
     else {
       TestsDataService.get(currentAssignedTest)
-      .then ((response) => {
-        // response.data.questions arr
-        this.props.retrieveQuestions()
-        .then((res) => {
-          // init ansersArr          
+        .then((response) => {
           let answerAr = [];
-          let questionList = [];
-          this.props.questions.filter(question => response.data.questions.includes(question.id))
-            .map(qustion => {
-              questionList.push(qustion);
-              answerAr.push({ id: qustion._id, choosen: -1 })
-            });
-          console.log(answerAr)
+          response.data.questions.map(qustion => {
+            answerAr.push({ id: qustion._id, choosen: -1 })
+          });
 
           this.setState({ questionAnswers: answerAr });
-          this.setState({ questions: questionList });
+          // this.setState({ questions: questionList });
+          this.props.userUpdateQuestion(response.data.questions);
           localStorage.setItem('currentAssignedTest', currentAssignedTest);
-
         })
-        .catch(err => {
-          console.error(err.getMessage());
-        });
-      })
     }
   }
 
@@ -84,6 +73,19 @@ class TestTab extends Component {
     });
   }
 
+  saveTestDataTolocalStorage(counter, questionNumber, previousAnswers) {
+
+    let testData = localStorage.getItem('testData').length > 0 ? JSON.parse(localStorage.getItem('testData')) : {};
+    if (counter) {
+      testData.counter = counter;
+    }
+    if (questionNumber) {
+      testData.questionNumber = questionNumber;
+    }
+    if (previousAnswers) {
+      testData.previousAnswers = previousAnswers;
+    }
+  }
   handleAnswerOptionClick(isCorrect, id, index) {
 
     this.setState({ currentAns: isCorrect });
@@ -93,6 +95,10 @@ class TestTab extends Component {
     this.setState({
       questionAnswers: quesArr
     });
+    this.setState({ currentAns: isCorrect });
+    let btnTickIcon = document.getElementById(`questionTicker-${id}`)
+    btnTickIcon.classList.add("d-block")
+    btnTickIcon.classList.remove("d-none")
   }
 
   setActiveQuestion(question, index) {
@@ -115,11 +121,9 @@ class TestTab extends Component {
   }
 
   removeQuestion(id) {
-    this.props
-      .deleteQuestion(id)
-      .catch((e) => {
-        console.log(e);
-      });
+    this.props.deleteQuestion(id).catch((e) => {
+      console.log(e);
+    });
   }
 
   nextQuestion() {
@@ -132,6 +136,7 @@ class TestTab extends Component {
       let currentCount = this.state.count;
       currentCount++;
       this.setState({ count: currentCount });
+      console.log(currentCount + " " + this.props.questions.length)
       if (currentCount === this.props.questions.length) {
         this.setState({ lastQuestion: true });
       }
@@ -146,14 +151,16 @@ class TestTab extends Component {
     }
   }
 
+
   render() {
     const { showScore, score, count, lastQuestion } = this.state;
     // get query from url
     const search = this.props.location.search;
 
     const { questions } = this.props;
+    console.log(questions);
     // console.log(questions)
-    const hoursMinsSecs = { hours: 0, minutes: 0, seconds: 30 }
+    const hoursMinsSecs = { hours: 0, minutes: 0, seconds: 30 };
 
     return (
       <div>
@@ -167,55 +174,146 @@ class TestTab extends Component {
           </div>
           :
           (
-          <div>
-          <Row className="justify-content-md-center">
-          <Col md="auto mb-4">
-            <h4>{!showScore ? "Instruction: You have 30 sec to solve the question and go to the next one!" : "Congrats, You finished your test!"}</h4>
-          </Col>
-        </Row>
-        <Container>
-          {showScore ? (
-            <Button variant="primary">
-              You scored <Badge bg="secondary">{score}</Badge> out of <Badge bg="secondary">{questions.length}</Badge>
-              <span className="visually-hidden">unread messages</span>
-            </Button>
-          ) : (
-            <>
-              <Row className="mb-3">
-                <Col>
-                  <Button variant="primary"><span>Question {count} from {questions.length} questions</span> </Button>
-                </Col>
-                <Col></Col><Col>
-                <Button variant="secondary"><CountDown hoursMinsSecs={hoursMinsSecs} />  </Button>
-                </Col>
-                <Col></Col> 
-                <Col>
-                  <Button id="nexQuestion" style={{color: "white", display: {}}} color="white" onClick={this.nextQuestion} variant="info">{!lastQuestion ? "Next Question >" : "submit"} </Button>{' '}
+            <div>
+              <Row className="justify-content-md-center">
+                <Col md="auto mb-4">
+                  <h4>
+                    {!showScore
+                      ? "Instruction: You have 30 sec to solve the question and go to the next one!"
+                      : "Congrats, You finished your test!"}
+                  </h4>
                 </Col>
               </Row>
-              <Row className=" justify-content-center">
-                { questions[count-1] &&
+              <Container>
+                {showScore ? (
+                  <Button variant="primary">
+                    You scored <Badge bg="secondary">{score}</Badge> out of{" "}
+                    <Badge bg="secondary">{questions.length}</Badge>
+                    <span className="visually-hidden">unread messages</span>
+                  </Button>
+                ) : (
                   <>
-                    <div style={{ marginTop: "30px", minWidth: "400px", maxWidth: "700px" }}><span>No. {count}: {questions.length > 0 ? questions[count-1].description : ""}{' '}</span>
-                      {questions.length > 0 && questions[count-1].alternatives.map((answerOption, index) => (
-                        <ListGroup className="mb-1">
-                          <ListGroup.Item action  active={this.state.questionAnswers.length > 0 && this.state.questionAnswers[this.state.questionAnswers.findIndex(obj => obj.id === questions[count-1]._id)].choosen === index} onClick={() => this.handleAnswerOptionClick(answerOption.isCorrect, questions[count-1]._id, index)}>
-                            {answerOption.text}
-                          </ListGroup.Item>
-                        </ListGroup>
-                      ))}
-                    </div>
-
+                    <Row className="mb-3">
+                      <Col>
+                        <Button variant="primary">
+                          <span>
+                            Question {count} from {questions.length} questions
+                          </span>{" "}
+                        </Button>
+                      </Col>
+                      <Col></Col>
+                      <Col>
+                        <Button variant="secondary">
+                          <CountDown hoursMinsSecs={hoursMinsSecs} />{" "}
+                        </Button>
+                      </Col>
+                      <Col></Col>
+                      <Col>
+                        <Button
+                          id="nexQuestion"
+                          style={{ color: "white", display: {} }}
+                          color="white"
+                          onClick={this.nextQuestion}
+                          variant="info"
+                        >
+                          {!lastQuestion ? "Next Question >" : "submit"}{" "}
+                        </Button>{" "}
+                      </Col>
+                    </Row>
+                    <Row className=" justify-content-center">
+                      {questions[count - 1] && (
+                        <>
+                          <div
+                            style={{
+                              marginTop: "30px",
+                              minWidth: "400px",
+                              maxWidth: "700px",
+                            }}
+                          >
+                            <span>
+                              No. {count}:{" "}
+                              {questions.length > 0
+                                ? questions[count - 1].description
+                                : ""}{" "}
+                            </span>
+                            {questions.length > 0 &&
+                              questions[count - 1].alternatives.map(
+                                (answerOption, index) => (
+                                  <ListGroup className="mb-1">
+                                    <ListGroup.Item
+                                      action
+                                      active={
+                                        this.state.questionAnswers.length > 0 &&
+                                        this.state.questionAnswers[
+                                          this.state.questionAnswers.findIndex(
+                                            (obj) =>
+                                              obj.id === questions[count - 1]._id
+                                          )
+                                        ].choosen === index
+                                      }
+                                      onClick={() =>
+                                        this.handleAnswerOptionClick(
+                                          answerOption.isCorrect,
+                                          questions[count - 1]._id,
+                                          index
+                                        )
+                                      }
+                                    >
+                                      {answerOption.text}
+                                    </ListGroup.Item>
+                                  </ListGroup>
+                                )
+                              )}
+                          </div>
+                          <div
+                            style={{
+                              minWidth: "150px",
+                              maxWidth: "200px",
+                              marginLeft: "100px"
+                            }}
+                          >
+                            {questions.map((question, index) => (
+                              <>
+                                <ListGroup className="mb-1">
+                                  <ListGroup.Item className="ml-5" key={index}>
+                                    <Row>
+                                      <Col md="2" className="mt-1">
+                                        <i id={`questionTicker-${question._id}`}
+                                          className="far fa-check-circle d-none"
+                                          style={{ marginRight: "6px", color: "green" }}
+                                        >
+                                        </i>
+                                      </Col>
+                                      <Col md="10">
+                                        Question No {index + 1}
+                                      </Col>
+                                    </Row>
+                                  </ListGroup.Item>
+                                </ListGroup>
+                              </>
+                            ))}
+                          </div>
+                        </>
+                      )}
+                    </Row>
+                    {/* <Row>
+                <div>
+                  {questions.map((question, index) => (
+                      <ListGroup className="mb-1">
+                        <ListGroup.Item>
+                          Question No {index + 1}
+                        </ListGroup.Item>
+                      </ListGroup>
+                  ))}
+                </div>
+              </Row> */}
                   </>
-                }
-              </Row>
-            </>
-          )}
-        </Container>
-        </div>)
+                )}
+              </Container>
+            </div>)
         }
       </div>
-    )
+    );
   }
 }
 
@@ -228,4 +326,4 @@ const mapStateToProps = (state) => {
 };
 
 
-export default connect(mapStateToProps, { retrieveTest, submitResult, retrieveQuestions, deleteAllQuestions, deleteQuestion })(TestTab);
+export default connect(mapStateToProps, { userUpdateQuestion, retrieveTest, submitResult, retrieveQuestions, deleteAllQuestions, deleteQuestion })(TestTab);

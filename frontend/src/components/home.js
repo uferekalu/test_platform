@@ -13,7 +13,7 @@ class Home extends Component {
 
 
     render() {
-        console.log("This is ", this.props.auth.user)
+        console.log("This is Admin status ", this.props.auth.user.isAdmin)
         return (
             <Container className="mt-5">
                 <Row className="justify-content-center">

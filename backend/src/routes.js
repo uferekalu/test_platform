@@ -350,7 +350,7 @@ router.get("/test/:id", async (req, res) => {
   try {
     const _id = req.params.id;
 
-    const test = await Test.findOne({ _id });
+    const test = await Test.findOne({ _id }).populate('questions');
     if (!test) {
       return res.status(404).json({});
     } else {
