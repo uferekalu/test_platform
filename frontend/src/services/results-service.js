@@ -13,6 +13,10 @@ class ResultsDataService {
     return http.get(`/get-participants`);
   }
 
+  assignTest(data) {
+    return http.put("/assign-test", data);
+  }
+
   submit(data) {
     return http.post("/results/submit", data);
   }

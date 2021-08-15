@@ -1,6 +1,7 @@
 import {
     CREATE_TESTS,
     RETRIEVE_TESTS,
+    RETRIEVE_TEST,
     UPDATE_TEST,
     DELETE_TEST,
     DELETE_ALL_TESTS
@@ -29,6 +30,18 @@ import {
   
       dispatch({
         type: RETRIEVE_TESTS,
+        payload: res.data,
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  export const retrieveCurrentTest = (id) => async (dispatch) => {
+    try {
+      const res = await testsDataService.get(id);
+  
+      dispatch({
+        type: RETRIEVE_TEST,
         payload: res.data,
       });
     } catch (err) {

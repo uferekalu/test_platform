@@ -3,6 +3,9 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { retrieveQuestions, deleteAllQuestions, simpleUpdateQuestion, deleteQuestion } from "../actions/questions";
 import { submitResult } from "../actions/authActions";
+import { retrieveTest } from "../actions/tests";
+import TestsDataService from "../services/tests-services";
+
 
 import CountDown from './countdown'
 import { Container, Row, Col, Button, Badge, ListGroup, Pagination } from 'react-bootstrap';
@@ -16,8 +19,9 @@ class TestTab extends Component {
     this.removeAllQuestions = this.removeAllQuestions.bind(this);
     this.removeQuestion = this.removeQuestion.bind(this);
     this.nextQuestion = this.nextQuestion.bind(this);
-    
+
     this.state = {
+      notAssigned: false,
       currentQuestion: 0,
       currentIndex: -1,
       showScore: false,
@@ -29,28 +33,48 @@ class TestTab extends Component {
       total: 0,
       lastQuestion: false,
       questionAnswers: [],
+      questions: [],
       items: [],
     };
   }
 
   componentDidMount() {
+    let currentAssignedTest = this.props.auth.currentAssignedTest ? this.props.auth.currentAssignedTest : localStorage.getItem('currentAssignedTest');
+    localStorage.setItem('currentAssignedTest', currentAssignedTest);
 
-    this.props.retrieveQuestions()
-      .then(() => {
+    if (!currentAssignedTest) {
+      this.setState({ notAssigned: true })
+    }
+    else {
+      TestsDataService.get(currentAssignedTest)
+      .then ((response) => {
+        // response.data.questions arr
+        this.props.retrieveQuestions()
+        .then((res) => {
+          // init ansersArr          
+          let answerAr = [];
+          let questionList = [];
+          this.props.questions.filter(question => response.data.questions.includes(question.id))
+            .map(qustion => {
+              questionList.push(qustion);
+              answerAr.push({ id: qustion._id, choosen: -1 })
+            });
+          console.log(answerAr)
 
-        // init ansersArr
-        let answerAr = [];
-        this.props.questions.map(qustion => {
-          answerAr.push({id: qustion._id, choosen: -1})
+          this.setState({ questionAnswers: answerAr });
+          this.setState({ questions: questionList });
+          localStorage.setItem('currentAssignedTest', currentAssignedTest);
+
+        })
+        .catch(err => {
+          console.error(err.getMessage());
         });
-        console.log(answerAr)
-
-        this.setState({questionAnswers: answerAr});
-        // CountDown.reset();
       })
-      .catch(err => {
-        console.error(err.getMessage());
-      });
+    }
+  }
+
+  mapTestToName = (tests, id) => {
+
   }
 
   refreshData() {
@@ -62,12 +86,12 @@ class TestTab extends Component {
 
   handleAnswerOptionClick(isCorrect, id, index) {
 
-    this.setState({currentAns: isCorrect});
+    this.setState({ currentAns: isCorrect });
     let objIndex = this.state.questionAnswers.findIndex(obj => obj.id === id);
     let quesArr = this.state.questionAnswers;
     quesArr[objIndex].choosen = index;
     this.setState({
-      questionAnswers : quesArr
+      questionAnswers: quesArr
     });
   }
 
@@ -100,33 +124,32 @@ class TestTab extends Component {
 
   nextQuestion() {
     if (this.state.currentAns) {
-        this.setState({
-          score: this.state.score + 1,
-        })
+      this.setState({
+        score: this.state.score + 1,
+      })
+    }
+    if (!this.state.lastQuestion) {
+      let currentCount = this.state.count;
+      currentCount++;
+      this.setState({ count: currentCount });
+      if (currentCount === this.props.questions.length) {
+        this.setState({ lastQuestion: true });
       }
-      if(!this.state.lastQuestion){
-        let currentCount = this.state.count;
-        currentCount++;
-        this.setState({count: currentCount});
-        if(currentCount === this.props.questions.length){
-            this.setState({lastQuestion: true});
-        }
-        document.getElementById('countDown').click();    
-      }
-      else { // submit action
-        this.setState({showScore: true})
-        // send submit
-        this.props.submitResult({ test: this.state , answers: this.state , passPercentage: this.state , attempt: this.state , })
-        // add attempts
+      document.getElementById('countDown').click();
+    }
+    else { // submit action
+      this.setState({ showScore: true })
+      // send submit
+      this.props.submitResult({ test: this.state, answers: this.state, passPercentage: this.state, attempt: this.state, })
+      // add attempts
 
-      }
+    }
   }
 
   render() {
     const { showScore, score, count, lastQuestion } = this.state;
     // get query from url
     const search = this.props.location.search;
-    const page = new URLSearchParams(search).get("page");
 
     const { questions } = this.props;
     // console.log(questions)
@@ -134,7 +157,18 @@ class TestTab extends Component {
 
     return (
       <div>
-        <Row className="justify-content-md-center">
+        {this.state.notAssigned ?
+          <div>
+            <Row className="justify-content-md-center">
+              <Col md="auto mb-4">
+                <h4>You have not been assigned a test yet</h4>
+              </Col>
+            </Row>
+          </div>
+          :
+          (
+          <div>
+          <Row className="justify-content-md-center">
           <Col md="auto mb-4">
             <h4>{!showScore ? "Instruction: You have 30 sec to solve the question and go to the next one!" : "Congrats, You finished your test!"}</h4>
           </Col>
@@ -178,6 +212,8 @@ class TestTab extends Component {
             </>
           )}
         </Container>
+        </div>)
+        }
       </div>
     )
   }
@@ -186,9 +222,10 @@ class TestTab extends Component {
 const mapStateToProps = (state) => {
   return {
     questions: state.questions,
+    tests: state.tests,
     auth: state.auth,
   };
 };
 
 
-export default connect(mapStateToProps, { submitResult, retrieveQuestions, deleteAllQuestions, deleteQuestion })(TestTab);
+export default connect(mapStateToProps, { retrieveTest, submitResult, retrieveQuestions, deleteAllQuestions, deleteQuestion })(TestTab);

@@ -16,6 +16,7 @@ class ParticipantList extends Component {
 
         this.state = {
             participants: [],
+            eachParticapantsTest: [],
             questions: [],
             questionsSel: [],
             questionsClicked: [],
@@ -38,9 +39,12 @@ class ParticipantList extends Component {
                     participants: response.data,
                 });
                 
-                let tempquestionsClicked = [];
-                this.props.questions.map((question) => {
-                    tempquestionsClicked.push(false);
+                let eachParticapantsTest = [];
+                response.data.map((participant, index) => {
+                    eachParticapantsTest.push(participant.currentAssignedTest ? participant.currentAssignedTest : null);
+                });
+                this.setState({
+                    eachParticapantsTest
                 });
             })
             .catch((e) => {
@@ -48,8 +52,19 @@ class ParticipantList extends Component {
             });
     }
 
-    handleSelectorChange(e) {
-        this.setState({ category: e.target.value });
+    handleSelectorChange(e, index, id) {
+        let eachParticapantsTest = [];
+        let data = {};
+        eachParticapantsTest = this.state.eachParticapantsTest;
+        eachParticapantsTest[index] =  e.target.value;
+        this.setState({ eachParticapantsTest });
+        data.test = e.target.value;
+        data.userId = id;
+        ResultsDataService.assignTest(data)
+        .catch(err => {
+            console.log(err);
+        })
+
     }
 
     saveTest(e) {
@@ -133,7 +148,7 @@ class ParticipantList extends Component {
                         <h4>All participants</h4>
                     </Col>
                 </Row>
-                {this.state.participants.map((participant) => (
+                {this.state.participants.map((participant, index) => (
                     <Row className="justify-content-md-center">
                         <>
                             <Form onSubmit={this.saveTest}>
@@ -142,8 +157,8 @@ class ParticipantList extends Component {
                                     Name: {participant.name}
                                     </Col>
                                     <Col className="" md>
-                                    selected Test: 
-                                        <Form.Select value={this.state.category} onChange={this.handleSelectorChange} aria-label="Default select example">
+                                    Assigned Test: 
+                                        <Form.Select value={this.state.eachParticapantsTest[index]} onChange={(e) => this.handleSelectorChange(e, index, participant._id)} aria-label="Default select example">
                                             <option>select test</option>
                                             {tests.map((test) => (
                                                 <option value={test._id}>{test.name}</option>
@@ -163,7 +178,7 @@ class ParticipantList extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        categories: state.categories,
+        auth: state.auth,
         tests: state.tests,
     };
 };
