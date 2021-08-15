@@ -109,9 +109,8 @@ router.post("/login", async (req, res) => {
 router.put("/assign-test", async (req, res) => {
   try {
     // Form validation
-    const { test, userId } = validateLoginInput(req.body);
-    let user_exist = await Test.findOne({ _id: userId });
-
+    const { test, userId } = req.body;
+    let user_exist = await User.findOne({ _id: userId });
     // Check validation
     const { authorization } = req.headers;
     const token = authorization
@@ -119,7 +118,6 @@ router.put("/assign-test", async (req, res) => {
         ? authorization.split("Bearer ")[1]
         : null
       : null;
-    console.log(token);
     if (token) {
       //verify with token
       const user = jwt.verify(token, process.env.secretOrKey);
