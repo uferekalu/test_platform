@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { createQuestion, updateQuestion } from "../actions/questions";
 import { retrieveCategory } from "../actions/categories";
-import { Row, Col, Form, FloatingLabel, Button } from "react-bootstrap";
+import { Row, Col, Form, Button } from "react-bootstrap";
 import QuestionDataService from "../services/question-service";
 
 class AddQuestion extends Component {
@@ -78,7 +78,7 @@ class AddQuestion extends Component {
     let question = this.state.question;
     // only one
     question.alternatives.map((ele) => {
-      ele.isCorrect = false;
+      return ele.isCorrect = false;
     });
     question.alternatives[e.target.name].isCorrect = e.target.checked;
     this.setState({

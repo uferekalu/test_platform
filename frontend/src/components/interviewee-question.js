@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { retrieveQuestions, deleteAllQuestions, userUpdateQuestion, deleteQuestion } from "../actions/questions";
 import { submitResult } from "../actions/authActions";
@@ -8,7 +7,7 @@ import TestsDataService from "../services/tests-services";
 
 
 import CountDown from './countdown'
-import { Container, Row, Col, Button, Badge, ListGroup, Pagination } from 'react-bootstrap';
+import { Container, Row, Col, Button, Badge, ListGroup } from 'react-bootstrap';
 
 
 class TestTab extends Component {
@@ -63,7 +62,7 @@ class TestTab extends Component {
           localStorage.setItem('currentAssignedTest', currentAssignedTest);
           localStorage.setItem('passPercentage', response.data.passPercentage);
           localStorage.setItem('attempt', this.props.auth.user.attempt);
-          if (localStorage.getItem("questionNumber") && localStorage.getItem("questionNumber") == response.data.questions.length) {
+          if (localStorage.getItem("questionNumber") && localStorage.getItem("questionNumber") === response.data.questions.length) {
             this.setState({ lastQuestion: true });
           }    
         })
@@ -192,9 +191,6 @@ class TestTab extends Component {
 
   render() {
     const { showScore, score, count, lastQuestion } = this.state;
-    // get query from url
-    const search = this.props.location.search;
-
     const { questions } = this.props;
     // console.log(questions);
     // console.log(questions)

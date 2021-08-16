@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { createQuestion, updateQuestion } from "../actions/questions";
+import { createQuestion } from "../actions/questions";
 import { retrieveCategory } from "../actions/categories";
 import { retrieveQuestions } from "../actions/questions";
 import { createTest, updateTest } from "../actions/tests";
-import { Row, Col, Form, FloatingLabel, Button, ListGroup } from 'react-bootstrap';
+import { Row, Col, Form, Button, ListGroup } from 'react-bootstrap';
 import TestDataService from "../services/tests-services";
 
 class AddTest extends Component {
@@ -104,7 +104,7 @@ class AddTest extends Component {
         let question = this.state.question;
         // only one
         question.alternatives.map(ele => {
-            ele.isCorrect = false;
+            return ele.isCorrect = false;
         })
         question.alternatives[e.target.name].isCorrect = e.target.checked;
         this.setState({
@@ -156,7 +156,7 @@ class AddTest extends Component {
     }
 
     saveTest(e) {
-        const { question } = this.state;
+        // const { question } = this.state;
         let questionsId = [];
         this.state.questions.map((question, index) => {
             if (this.state.questionsClicked[index] === true) {

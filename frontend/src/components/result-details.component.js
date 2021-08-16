@@ -1,14 +1,11 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { retrieveQuestions, deleteAllQuestions, userUpdateQuestion, deleteQuestion } from "../actions/questions";
 import { submitResult } from "../actions/authActions";
 import { retrieveTest } from "../actions/tests";
 import ResultsDataService from "../services/results-service";
 
-
-import CountDown from './countdown'
-import { Container, Row, Col, Button, Badge, ListGroup, Pagination } from 'react-bootstrap';
+import { Container, Row, Col, Button, Badge, ListGroup } from 'react-bootstrap';
 
 
 class TestTab extends Component {
@@ -75,14 +72,9 @@ class TestTab extends Component {
 
 
     render() {
-        const { showScore, score, count, lastQuestion } = this.state;
-        // get query from url
-        const search = this.props.location.search;
+        const { count, lastQuestion } = this.state;
 
         const { results, showSummery } = this.state;
-        // console.log(questions);
-        // console.log(questions)
-        const hoursMinsSecs = { hours: localStorage.getItem("hours"), minutes: localStorage.getItem("minutes"), seconds: localStorage.getItem("seconds") };
 
         return (
             <div>

@@ -1,11 +1,8 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { retrieveResult } from "../actions/results";
-import CountDown from './countdown'
-import { Container, Row, Col, Button, Badge, ListGroup, Pagination, Alert } from 'react-bootstrap';
+import { Container, Row, Col, Button, Pagination } from 'react-bootstrap';
 import SweetAlert from 'react-bootstrap-sweetalert';
-import categories from "./categories";
 
 class ResultsList extends Component {
     constructor(props) {
@@ -121,14 +118,13 @@ class ResultsList extends Component {
     }
 
     render() {
-        const { show, showScore, score, pageSize } = this.state;
+        const { show, pageSize } = this.state;
         // get query from url
         const search = this.props.location.search;
         const page = new URLSearchParams(search).get("page");
 
         const { results } = this.props;
         // console.log(results)
-        const hoursMinsSecs = { hours: 1, minutes: 20, seconds: 40 }
 
         return (
             <div>
@@ -155,7 +151,7 @@ class ResultsList extends Component {
                             ).map((Result, index) => (
                                 <>
                                     <Col style={{ marginTop: "30px", minWidth: "400px", maxWidth: "400px" }}>
-                                        <span>{index + 1}- Participant {Result.user.name} attempt number {Result.attempt} got {Result.correctAnsweredCount} right answers in {Result.test.name} test{' '}</span>
+                                        <span>{index + 1}- Participant {Result.user.name} with {Result.attempt} {Result.attempt > 1 ? 'attempts' : 'attempt' } got {Result.correctAnsweredCount} right answers in {Result.test.name} test{' '}</span>
                                         <br/>
                                         <br/>
                                         <Button onClick={() => this.props.history.push("/results/" + Result._id)} variant="outline-success">View Details</Button>{' '}
