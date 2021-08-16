@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export default axios.create({
-  baseURL: "http://localhost:3333/api",
+  baseURL: "https://interview-test-platform.herokuapp.com/api",
   headers: {
     "Content-type": "application/json",
     "authorization": localStorage.jwtToken
