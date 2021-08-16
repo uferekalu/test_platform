@@ -155,7 +155,7 @@ class ResultsList extends Component {
                             ).map((Result, index) => (
                                 <>
                                     <Col style={{ marginTop: "30px", minWidth: "400px", maxWidth: "400px" }}>
-                                        <span>{index + 1}- Participant {Result.user.name} attempt number {Result.attempt} got {Result.correctAnsweredCount} right answers in {Result.test.name} test{' '}</span>
+                                        <span>{index + 1}- Participant {Result.user.name} with {Result.attempt} {Result.attempt > 1 ? 'attempts' : 'attempt' } got {Result.correctAnsweredCount} right answers in {Result.test.name} test{' '}</span>
                                         <br/>
                                         <br/>
                                         <Button onClick={() => this.props.history.push("/results/" + Result._id)} variant="outline-success">View Details</Button>{' '}
