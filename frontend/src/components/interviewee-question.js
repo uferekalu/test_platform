@@ -155,6 +155,16 @@ class TestTab extends Component {
         score: this.state.score + 1,
       })
     }
+    let answerAr = this.state.answerAr;
+    console.log("count " + this.state.count + "len " + this.state.answerAr.length)
+    if(this.state.count - 1 !== this.state.answerAr.length - 1){
+      answerAr.push({
+        questionId: this.props.questions[this.state.count - 1]._id,
+        answer: "",
+        isCorrect: false,
+        timeTaken: "00"+":" +"00" +":"+ "00",
+      });
+    }
     if (!this.state.lastQuestion) {
       let currentCount = this.state.count;
       currentCount++;
@@ -169,11 +179,11 @@ class TestTab extends Component {
     else { // submit action
       this.setState({ showScore: true })
       // send submit
-      this.props.submitResult({ 
-      test: localStorage.getItem("currentAssignedTest"),
-      answers: this.state.answerAr,
-      passPercentage: localStorage.getItem('passPercentage'), 
-      attempt: parseInt(localStorage.getItem('attempt')) + 1, });
+      // this.props.submitResult({ 
+      // test: localStorage.getItem("currentAssignedTest"),
+      // answers: this.state.answerAr,
+      // passPercentage: localStorage.getItem('passPercentage'), 
+      // attempt: parseInt(localStorage.getItem('attempt')) + 1, });
       // add attempts
     }
     localStorage.setItem("answerAr", JSON.stringify(this.state.answerAr));
