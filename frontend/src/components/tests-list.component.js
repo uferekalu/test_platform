@@ -1,9 +1,7 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import { retrieveTest, deleteAllTest, simpleUpdateTest, deleteTest } from "../actions/tests";
-import CountDown from './countdown'
-import { Container, Row, Col, Button, Badge, ListGroup, Pagination, Alert } from 'react-bootstrap';
+import { retrieveTest, deleteAllTest, deleteTest } from "../actions/tests";
+import { Container, Row, Col, Button, Badge, Pagination } from 'react-bootstrap';
 import SweetAlert from 'react-bootstrap-sweetalert';
 
 class TestList extends Component {
@@ -115,7 +113,7 @@ class TestList extends Component {
   }
 
   render() {
-    const { show, showScore, score, pageSize } = this.state;
+    const { show, pageSize } = this.state;
     // get query from url
     const search = this.props.location.search;
     const page = new URLSearchParams(search).get("page");

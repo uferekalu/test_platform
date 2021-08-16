@@ -1,9 +1,7 @@
-import axios from "axios";
 import setAuthToken from "../utils/setAuthToken";
 import jwt_decode from "jwt-decode";
 
 import QuestionDataService from "../services/question-service";
-import TestsDataService from "../services/tests-services";
 
 import {
   GET_ERRORS,
@@ -63,7 +61,6 @@ export const loginUser = userData => async dispatch => {
 
 export const submitResult = resultData => async (dispatch, getState) => {
   try {
-    const res = await TestsDataService.submit(resultData);
     let authtemp = getState().auth;
     authtemp.attempt = authtemp.attempt + 1;
     dispatch(setCurrentUser(authtemp));

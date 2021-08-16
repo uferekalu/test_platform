@@ -1,7 +1,5 @@
 import {
-    CREATE_RESULTS,
     RETRIEVE_RESULTS,
-    UPDATE_RESULT,
   } from "./types";
   
   import ResultsDataService from "../services/results-service";

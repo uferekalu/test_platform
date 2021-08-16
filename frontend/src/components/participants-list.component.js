@@ -1,10 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from "react-redux";
-import { createQuestion, updateQuestion } from "../actions/questions";
-import { retrieveCategory } from "../actions/categories";
-import { retrieveQuestions } from "../actions/questions";
-import { createTest, updateTest, retrieveTest } from "../actions/tests";
-import { Row, Col, Form, FloatingLabel, Button, ListGroup } from 'react-bootstrap';
+import { createTest, retrieveTest } from "../actions/tests";
+import { Row, Col, Form } from 'react-bootstrap';
 import ResultsDataService from "../services/results-service";
 
 class ParticipantList extends Component {
@@ -68,7 +65,7 @@ class ParticipantList extends Component {
     }
 
     saveTest(e) {
-        const { question } = this.state;
+        // const { question } = this.state;
         let questionsId = [];
         this.state.questions.map((question, index) => {
             if (this.state.questionsClicked[index] === true) {
@@ -138,7 +135,6 @@ class ParticipantList extends Component {
     }
 
     render() {
-        const { questions } = this.state;
         const { tests } = this.props;
 
         return (

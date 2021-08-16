@@ -1,10 +1,8 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import { retrieveQuestions, deleteAllQuestions, simpleUpdateQuestion, deleteQuestion } from "../actions/questions";
+import { retrieveQuestions, deleteAllQuestions, deleteQuestion } from "../actions/questions";
 import { retrieveCategory } from "../actions/categories";
-import CountDown from './countdown'
-import { Container, Row, Col, Button, Badge, ListGroup, Pagination, Alert } from 'react-bootstrap';
+import { Container, Row, Col, Button, Badge, ListGroup, Pagination} from 'react-bootstrap';
 import SweetAlert from 'react-bootstrap-sweetalert';
 
 class QuestionsList extends Component {
@@ -157,7 +155,6 @@ class QuestionsList extends Component {
 
     const { questions } = this.props;
     // console.log(questions)
-    const hoursMinsSecs = { hours: 1, minutes: 20, seconds: 40 }
 
     return (
       <div>

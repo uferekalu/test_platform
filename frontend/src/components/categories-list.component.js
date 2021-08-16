@@ -1,11 +1,8 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import { retrieveCategory, deleteAllCategory, simpleUpdateCategory, deleteCategory } from "../actions/categories";
-import CountDown from './countdown'
-import { Container, Row, Col, Button, Badge, ListGroup, Pagination, Alert } from 'react-bootstrap';
+import { retrieveCategory, deleteAllCategory, deleteCategory } from "../actions/categories";
+import { Container, Row, Col, Button, Pagination } from 'react-bootstrap';
 import SweetAlert from 'react-bootstrap-sweetalert';
-import categories from "./categories";
 
 class CategoryList extends Component {
   constructor(props) {
@@ -121,14 +118,13 @@ class CategoryList extends Component {
   }
 
   render() {
-    const { show, showScore, score, pageSize } = this.state;
+    const { show, pageSize } = this.state;
     // get query from url
     const search = this.props.location.search;
     const page = new URLSearchParams(search).get("page");
 
     const { categories } = this.props;
     // console.log(categories)
-    const hoursMinsSecs = { hours: 1, minutes: 20, seconds: 40 }
 
     return (
       <div>
