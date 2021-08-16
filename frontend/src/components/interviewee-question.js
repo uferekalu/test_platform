@@ -90,7 +90,7 @@ class TestTab extends Component {
 
   }
 
-  handleAnswerOptionClick(isCorrect, id, index, questionIndex, description) {
+  handleAnswerOptionClick(isCorrect, id, index, questionIndex, answerStr) {
 
     this.setState({ currentAns: isCorrect });
     let objIndex = this.state.questionAnswers.findIndex(obj => obj.id === id);
@@ -109,7 +109,7 @@ class TestTab extends Component {
     if(questionIndex !== this.state.answerAr.length - 1){
       answerAr.push({
         questionId: id,
-        answer: description,
+        answer: answerStr,
         isCorrect,
         timeTaken: localStorage.getItem("hours")+":" + localStorage.getItem("minutes")+":"+localStorage.getItem("seconds"),
       });
@@ -117,7 +117,7 @@ class TestTab extends Component {
       this.setState({answerAr});        
     }
     else {
-      answerAr[questionIndex].answer = description;
+      answerAr[questionIndex].answer = answerStr;
       answerAr[questionIndex].isCorrect = isCorrect;
       this.setState({answerAr});
     }
@@ -285,7 +285,7 @@ class TestTab extends Component {
                                           questions[count - 1]._id,
                                           index,
                                           count - 1,
-                                          questions[count - 1].description,
+                                          answerOption.text,
                                         )
                                       }
                                     >

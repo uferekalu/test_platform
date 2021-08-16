@@ -15,8 +15,9 @@ const ResultsSchema = new mongoose.Schema({
     answers: [
         {
             questionId: {
-                type: String,
-                required: true
+                type: mongoose.Schema.Types.ObjectId,
+                required: true,
+                ref: 'Question'
             },
             answer: String,//null
             isCorrect: {

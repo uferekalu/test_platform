@@ -66,16 +66,6 @@ export const submitResult = resultData => async (dispatch, getState) => {
     const res = await TestsDataService.submit(resultData);
     let authtemp = getState().auth;
     authtemp.attempt = authtemp.attempt + 1;
-    // Save to localStorage
-    // Set token to localStorage
-    // const { token } = res.data;
-    // localStorage.setItem("jwtToken", token);
-    // Set token to Auth header
-    // setAuthToken(token);
-    // Decode token to get user data
-    // const decoded = jwt_decode(token);
-    // decoded.attempt = decoded.attempt + 1;
-    // Set current user
     dispatch(setCurrentUser(authtemp));
   } catch (err) {
     dispatch({

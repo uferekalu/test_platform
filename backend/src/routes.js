@@ -425,7 +425,7 @@ router.post("/results/submit", async (req, res) => {
 // get all results
 router.get("/results", async (req, res) => {
   try {
-    const results = await Results.find();
+    const results = await Results.find().populate('user', 'name').populate('test', 'name');
     return res.status(200).json(results);
   } catch (error) {
     return res.status(500).json({ error: error });
@@ -437,7 +437,7 @@ router.get("/result/:id", async (req, res) => {
   try {
     const _id = req.params.id;
 
-    const result = await Results.findOne({ _id });
+    const result = await Results.findOne({ _id }).populate('user', 'name').populate('test', 'name').populate('answers.questionId');
     if (!result) {
       return res.status(404).json({});
     } else {
