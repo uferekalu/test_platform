@@ -31,6 +31,9 @@ class Dashboard extends Component {
             <Link to="/test" onClick={() => {
               localStorage.setItem("questionNumber", "1");
               localStorage.setItem("answerAr", "");
+              localStorage.setItem("hours", "0");
+              localStorage.setItem("minutes", "0");
+              localStorage.setItem("seconds", "30");
             }}
               className="account-button-link w-100 ">
               Start Test
