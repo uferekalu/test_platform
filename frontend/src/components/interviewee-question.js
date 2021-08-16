@@ -157,7 +157,7 @@ class TestTab extends Component {
     }
     let answerAr = this.state.answerAr;
     console.log("count " + this.state.count + "len " + this.state.answerAr.length)
-    if(this.state.count - 1 !== this.state.answerAr.length - 1){
+    if(this.state.count - 1 == this.state.answerAr.length){
       answerAr.push({
         questionId: this.props.questions[this.state.count - 1]._id,
         answer: "",
@@ -179,11 +179,11 @@ class TestTab extends Component {
     else { // submit action
       this.setState({ showScore: true })
       // send submit
-      // this.props.submitResult({ 
-      // test: localStorage.getItem("currentAssignedTest"),
-      // answers: this.state.answerAr,
-      // passPercentage: localStorage.getItem('passPercentage'), 
-      // attempt: parseInt(localStorage.getItem('attempt')) + 1, });
+      this.props.submitResult({ 
+      test: localStorage.getItem("currentAssignedTest"),
+      answers: this.state.answerAr,
+      passPercentage: localStorage.getItem('passPercentage'), 
+      attempt: parseInt(localStorage.getItem('attempt')) + 1, });
       // add attempts
     }
     localStorage.setItem("answerAr", JSON.stringify(this.state.answerAr));

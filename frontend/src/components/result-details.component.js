@@ -132,7 +132,7 @@ class TestTab extends Component {
                                                 {results.answers.length > 0
                                                     ? results.answers[count - 1].questionId.description
                                                     : ""}{" "}
-                                            {results.answers[count - 1].isCorrect ? <Badge bg="success">Correct Answer</Badge>:  <Badge bg="danger">False Answer</Badge>}
+                                            {results.answers[count - 1].isCorrect ? <Badge bg="success">Correct Answer</Badge>:  <Badge bg="danger">{results.answers[count - 1].answer.length === 0 ? "Did not answer" : "False Answer"}</Badge>}
                                             </span>
                                             {results.answers.length > 0 &&
                                                 results.answers[count - 1].questionId.alternatives.map(
