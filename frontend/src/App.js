@@ -62,103 +62,106 @@ class App extends Component {
           </Link>
           <div className="navbar-nav mr-auto">
             {this.props.auth.isAuthenticated && (
-                <li className="nav-item">
-                  <Link to={"/test"} onClick={() => {
-                    localStorage.setItem("questionNumber", "1");
-                    localStorage.setItem("answerAr", "");
-                  }} 
+              <li className="nav-item">
+                <Link to={"/test"} onClick={() => {
+                  localStorage.setItem("questionNumber", "1");
+                  localStorage.setItem("answerAr", "");
+                  localStorage.setItem("hours", "0");
+                  localStorage.setItem("minutes", "0");
+                  localStorage.setItem("seconds", "30");
+                }}
                   className="nav-link">
-                    Take Test
-                  </Link>
-                </li>
+                  Take Test
+                </Link>
+              </li>
             )}
             {this.props.auth.isAuthenticated &&
               this.props.auth.user.isAdmin === true && (
                 <>
-            <li className="nav-item">
-              <Navbar.Collapse id="navbar-dark-example">
-                <Nav>
-                  <NavDropdown
-                    id="nav-dropdown-dark-example"
-                    title="Results"
-                    menuVariant="dark"
-                  >
-                    <NavDropdown.Item>
-                      <Link to={"/participants"} className="nav-link">
-                        All Participants
-                      </Link>
-                    </NavDropdown.Item>
-                    <NavDropdown.Item>
-                      <Link to={"/results"} className="nav-link">
-                        Results List
-                      </Link>
-                    </NavDropdown.Item>
-                  </NavDropdown>
-                </Nav>
-              </Navbar.Collapse>
-            </li>
-            <li className="nav-item">
-              <Navbar.Collapse id="navbar-dark-example">
-                <Nav>
-                  <NavDropdown
-                    id="nav-dropdown-dark-example"
-                    title="Add"
-                    menuVariant="dark"
-                  >
-                    <NavDropdown.Item>
-                      <Link to={"/add"} className="nav-link">
-                        Add Question
-                      </Link>
-                    </NavDropdown.Item>
-                    <NavDropdown.Item>
-                      <Link to={"/Category/add"} className="nav-link">
-                        Add Category
-                      </Link>
-                    </NavDropdown.Item>
-                    <NavDropdown.Item>
-                      <Link to={"/test/add"} className="nav-link">
-                        Add Test
-                      </Link>
-                    </NavDropdown.Item>
+                  <li className="nav-item">
+                    <Navbar.Collapse id="navbar-dark-example">
+                      <Nav>
+                        <NavDropdown
+                          id="nav-dropdown-dark-example"
+                          title="Results"
+                          menuVariant="dark"
+                        >
+                          <NavDropdown.Item>
+                            <Link to={"/participants"} className="nav-link">
+                              All Participants
+                            </Link>
+                          </NavDropdown.Item>
+                          <NavDropdown.Item>
+                            <Link to={"/results"} className="nav-link">
+                              Results List
+                            </Link>
+                          </NavDropdown.Item>
+                        </NavDropdown>
+                      </Nav>
+                    </Navbar.Collapse>
+                  </li>
+                  <li className="nav-item">
+                    <Navbar.Collapse id="navbar-dark-example">
+                      <Nav>
+                        <NavDropdown
+                          id="nav-dropdown-dark-example"
+                          title="Add"
+                          menuVariant="dark"
+                        >
+                          <NavDropdown.Item>
+                            <Link to={"/add"} className="nav-link">
+                              Add Question
+                            </Link>
+                          </NavDropdown.Item>
+                          <NavDropdown.Item>
+                            <Link to={"/Category/add"} className="nav-link">
+                              Add Category
+                            </Link>
+                          </NavDropdown.Item>
+                          <NavDropdown.Item>
+                            <Link to={"/test/add"} className="nav-link">
+                              Add Test
+                            </Link>
+                          </NavDropdown.Item>
 
-                  </NavDropdown>
-                </Nav>
-              </Navbar.Collapse>
-            </li>
-            <Navbar.Toggle aria-controls="navbar-dark-example" />
-            <Navbar.Collapse id="navbar-dark-example">
-              <Nav>
-                <NavDropdown
-                  id="nav-dropdown-dark-example"
-                  title="Edit/Delete"
-                  menuVariant="dark"
-                >
-                  <NavDropdown.Item>
-                    <Link to={"/questions"} className="nav-link">
-                      Question list
-                    </Link>
-                  </NavDropdown.Item>
-                  <NavDropdown.Item>
-                    <Link to={"/Categoris"} className="nav-link">
-                      Category list
-                    </Link>
-                  </NavDropdown.Item>
-                  <NavDropdown.Item>
-                    <Link to={"/tests"} className="nav-link">
-                      Test list
-                    </Link>
-                  </NavDropdown.Item>
-                </NavDropdown>
-              </Nav>
-            </Navbar.Collapse>
+                        </NavDropdown>
+                      </Nav>
+                    </Navbar.Collapse>
+                  </li>
+                  <Navbar.Toggle aria-controls="navbar-dark-example" />
+                  <Navbar.Collapse id="navbar-dark-example">
+                    <Nav>
+                      <NavDropdown
+                        id="nav-dropdown-dark-example"
+                        title="Edit/Delete"
+                        menuVariant="dark"
+                      >
+                        <NavDropdown.Item>
+                          <Link to={"/questions"} className="nav-link">
+                            Question list
+                          </Link>
+                        </NavDropdown.Item>
+                        <NavDropdown.Item>
+                          <Link to={"/Categoris"} className="nav-link">
+                            Category list
+                          </Link>
+                        </NavDropdown.Item>
+                        <NavDropdown.Item>
+                          <Link to={"/tests"} className="nav-link">
+                            Test list
+                          </Link>
+                        </NavDropdown.Item>
+                      </NavDropdown>
+                    </Nav>
+                  </Navbar.Collapse>
                 </>
               )}
           </div>
-            {this.props.auth.isAuthenticated && (
-              <Button variant="primary" className="mb-4" onClick={this.onLogoutClick} style={{ marginTop: "15px", marginLeft: "10px"}}>
-                  Logout
-              </Button>
-            )}
+          {this.props.auth.isAuthenticated && (
+            <Button variant="primary" className="mb-4" onClick={this.onLogoutClick} style={{ marginTop: "15px", marginLeft: "10px" }}>
+              Logout
+            </Button>
+          )}
         </nav>
 
         <Container className="mt-3">

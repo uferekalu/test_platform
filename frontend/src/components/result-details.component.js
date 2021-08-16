@@ -46,6 +46,8 @@ class TestTab extends Component {
                 //   });
 
                 this.setState({ results: response.data });
+                if(response.data.answers.length == 1)
+                    this.setState({ lastQuestion: true });
                 // this.setState({ questions: questionList });
             })
     }
@@ -97,7 +99,8 @@ class TestTab extends Component {
                                 </Col>
                                 <Col>
                                     <Button variant="secondary">
-                                        Finished at: {results.answers && results.answers[count - 1].timeTaken}
+                                        {console.log(results.answers)}
+                                        Finished at: {results.answers && results.answers.length > 0 &&  results.answers[count - 1].timeTaken}
                                         {/* <CountDown saveTestDataTolocalStorage={this.saveTestDataTolocalStorage} hoursMinsSecs={hoursMinsSecs} />{" "} */}
                                     </Button>
                                 </Col>
@@ -115,7 +118,7 @@ class TestTab extends Component {
                                 </Col>
                             </Row>
                             <Row className=" justify-content-center">
-                                {results.answers && (
+                                {results.answers && results.answers.length > 0 && (
                                     <>
                                         <div
                                             style={{
