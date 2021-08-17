@@ -32,7 +32,7 @@ const CountDown = ({ hoursMinsSecs }) => {
         }    
     };
 
-    const reset = () => setTime([parseInt(hours), parseInt(minutes), parseInt(seconds)]);
+    const reset = () => setTime(["0", "0", "30"]);
 
     useEffect(() => {
         const timerId = setInterval(() => tick(), 1000);
