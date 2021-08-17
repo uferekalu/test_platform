@@ -155,13 +155,12 @@ class TestTab extends Component {
       })
     }
     let answerAr = this.state.answerAr;
-    console.log("count " + this.state.count + "len " + this.state.answerAr.length)
     if(this.state.count - 1 == this.state.answerAr.length){
       answerAr.push({
         questionId: this.props.questions[this.state.count - 1]._id,
         answer: "",
         isCorrect: false,
-        timeTaken: "00"+":" +"00" +":"+ "00",
+        timeTaken: "00:00:00",
       });
     }
     if (!this.state.lastQuestion) {
