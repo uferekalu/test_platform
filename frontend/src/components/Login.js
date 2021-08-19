@@ -19,14 +19,21 @@ class Login extends Component {
 
     componentDidMount() {
         // If logged in and user navigates to Login page, should redirect them to dashboard
-        if (this.props.auth.isAuthenticated) {
+        if (this.props.auth.isAuthenticated && this.props.auth.user.isAdmin === true) {
             this.props.history.push("/dashboard");
+        }
+        if (this.props.auth.isAuthenticated && !this.props.auth.user.isAdmin === true) {
+            this.props.history.push("/instruction");
         }
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.auth.isAuthenticated) {
+        if (nextProps.auth.isAuthenticated && nextProps.auth.user.isAdmin === true) {
             this.props.history.push("/dashboard");
+        }
+
+        if (nextProps.auth.isAuthenticated && !nextProps.auth.user.isAdmin === true) {
+            this.props.history.push("/instruction");
         }
 
         if (nextProps.errors) {
@@ -57,7 +64,7 @@ class Login extends Component {
         <Container>
             <Row className="justify-content-md-center">
                 <Link to="/" className="back-to-home mb-3">
-                    Back to home
+                    {'<<<'} Back to home
                 </Link>
                 <Col></Col>
                 <Col className="welcome mb-4"><h4>Login to Take Your Assessment</h4></Col>

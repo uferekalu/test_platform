@@ -27,6 +27,7 @@ import TestCreat from "./components/add-test.component";
 import ParticipantsList from "./components/participants-list.component";
 import ResultsList from "./components/results-list.component";
 import Results from "./components/result-details.component";
+import Instruction from "./components/instruction";
 
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {
@@ -188,20 +189,21 @@ class App extends Component {
             <Route exact path="/" component={Home} />
             <PrivateRoute exact path="/questions" component={QuestionsList} />
             <PrivateRoute exact path="/test" component={TestTab} />
-            <Route exact path="/add" component={AddQuestion} />
-            <Route exact path="/question/edit/:id" component={AddQuestion} />
-            <Route exact path="/test/edit/:id" component={TestCreat} />
-            <Route exact path="/question/:id" component={Question} />
+            <PrivateRoute exact path="/add" component={AddQuestion} />
+            <PrivateRoute exact path="/question/edit/:id" component={AddQuestion} />
+            <PrivateRoute exact path="/test/edit/:id" component={TestCreat} />
+            <PrivateRoute exact path="/question/:id" component={Question} />
             <Route path="/register" component={Register} />
             <Route path="/login" component={Login} />
-            <Route exact path="/Category/add" component={CategoryCreat} />
-            <Route exact path="/test/add" component={TestCreat} />
-            <Route exact path="/tests" component={TestsList} />
-            <Route exact path="/Categoris" component={CategoryList} />
-            <Route exact path="/Categoris/edit/:id" component={CategoryCreat} />
-            <Route exact path="/participants" component={ParticipantsList} />
-            <Route exact path="/results" component={ResultsList} />
-            <Route exact path="/results/:id" component={Results} />
+            <PrivateRoute path="/instruction" component={Instruction} />
+            <PrivateRoute exact path="/Category/add" component={CategoryCreat} />
+            <PrivateRoute exact path="/test/add" component={TestCreat} />
+            <PrivateRoute exact path="/tests" component={TestsList} />
+            <PrivateRoute exact path="/Categoris" component={CategoryList} />
+            <PrivateRoute exact path="/Categoris/edit/:id" component={CategoryCreat} />
+            <PrivateRoute exact path="/participants" component={ParticipantsList} />
+            <PrivateRoute exact path="/results" component={ResultsList} />
+            <PrivateRoute exact path="/results/:id" component={Results} />
             <PrivateRoute exact path="/dashboard" component={Dashboard} />
           </Switch>
         </Container>

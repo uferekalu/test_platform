@@ -55,7 +55,7 @@ class Register extends Component {
             <Container>
                 <Row className="justify-content-md-center">
                     <Link to="/" className="back-to-home mb-3">
-                        Back to home
+                        {'<<<'} Back to home
                     </Link>
                     <Col></Col>
                     <Col className="welcome mb-4"><h4>Register to Take Your Assessment</h4></Col>

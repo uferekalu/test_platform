@@ -22,28 +22,16 @@ class Dashboard extends Component {
             <b>Welcome,</b> {user.name.split(" ")[0]}
             <p className="flow-text grey-text text-darken-1">
               You are logged into the{" "}
-              <span style={{ fontFamily: "monospace" }}>ASSESSMENT</span> platform 👏
+              <span style={{ fontFamily: "monospace" }}>ADMIN</span> platform 👏
             </p>
           </h4>
           </Col>
-
-          <Button type="submit" variant="primary" className="mb-4">
-            <Link to="/test" onClick={() => {
-              localStorage.setItem("questionNumber", "1");
-              localStorage.setItem("answerAr", "");
-              localStorage.setItem("hours", "0");
-              localStorage.setItem("minutes", "0");
-              localStorage.setItem("seconds", "30");
-            }}
-              className="account-button-link w-100 ">
-              Start Test
-            </Link>
-          </Button>
-          <Button variant="primary" className="mb-4" onClick={this.onLogoutClick}>
-            Logout
-          </Button>
         </Row>
-        <Row className="action-but mt-5">
+        <Row className="admin-guide">
+          <p className="mt-1">
+            Here, you have access to the results of the participants through Results in Navbar.
+            You can add, edit and delete categories, questions and tests...
+          </p>
         </Row>
       </Container>
     );
