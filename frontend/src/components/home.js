@@ -11,15 +11,20 @@ class Home extends Component {
         console.log("This is Admin status ", this.props.auth.user.isAdmin)
         return (
             <Container className="mt-5">
-                <Row className="justify-content-center">
-                    <Col></Col>
+                <Row className="justify-content-md-center">
                     <Col className="welcome"><h4>Welcome to Test Assessment Platform!</h4></Col>
-                    <Col></Col>
+                </Row>
+                <Row className="justify-content-md-center mt-3 mb-3">
+                    <img 
+                        src="app-icon.png" 
+                        alt="img-app" 
+                        style={{ width: "30%", height: "30%", margin: "auto" }}
+                    />
                 </Row>
                 <Row className="justify-content-center">
                 {!this.props.auth.isAuthenticated ? (
                     <Container>
-                        <Col className="col-md-12 text-center mt-3 mb-3">
+                        <Col className="col-md-12 text-center mt-3 mb-4">
                             <Button variant="primary">
                                 <Link to="/register" className="account-button-link">
                                     Click here to register...
