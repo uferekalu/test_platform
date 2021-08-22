@@ -4,6 +4,8 @@ import { retrieveCategory, deleteAllCategory, deleteCategory } from "../actions/
 import { Container, Row, Col, Button, Pagination } from 'react-bootstrap';
 import SweetAlert from 'react-bootstrap-sweetalert';
 
+import PaginationComp from "./partials/pagination.component";
+
 class CategoryList extends Component {
   constructor(props) {
     super(props);
@@ -21,40 +23,22 @@ class CategoryList extends Component {
       active: false,
       show: false,
       pageSize: 10,
-      total: 0,
+      // total: 0,
       questionAnswers: [],
       items: [],
-      idToDelete:0,
+      idToDelete: 0,
     };
   }
 
   componentDidMount() {
-    console.log(this.props)
+    // console.log(this.props)
     this.props.history.push({
       search: '?page=1'
     });
 
     this.props.retrieveCategory()
       .then(() => {
-
-        // pagination items
-        let items = [];
-        // init pagination
-        // get total pages
-        let total = Math.ceil(this.props.categories.length / 10);
-        for (let number = 1; number <= total; number++) {
-          items.push(
-            <Pagination.Item onClick={() => {
-              this.props.history.push({
-                search: `?page=${number}`
-              });
-            }}
-              active={number === 1}>{number}</Pagination.Item>
-          );
-        }
-        this.setState({
-          items
-        });
+        this.setState({ total: Math.ceil(this.props.categories.length / 10) })
       })
       .catch(err => {
         console.error(err);
@@ -72,12 +56,10 @@ class CategoryList extends Component {
 
     let objIndex = this.state.questionAnswers.findIndex(obj => obj.id === id);
     let quesArr = this.state.questionAnswers;
-    console.log(id + "  " + JSON.stringify(this.state.questionAnswers))
     quesArr[objIndex].choosen = index;
     this.setState({
       questionAnswers: quesArr
     });
-    console.log(id + "  " + JSON.stringify(quesArr))
   }
 
   setActiveQuestion(question, index) {
@@ -91,7 +73,6 @@ class CategoryList extends Component {
     this.props
       .deleteAllCategory()
       .then((response) => {
-        console.log(response);
         this.refreshData();
       })
       .catch((e) => {
@@ -100,7 +81,7 @@ class CategoryList extends Component {
   }
 
   triggerAlert(id) {
-    this.setState({ show: true, idToDelete: id});    
+    this.setState({ show: true, idToDelete: id });
   }
 
   closeAlert() {
@@ -110,7 +91,7 @@ class CategoryList extends Component {
   removeCategory() {
     this.props
       .deleteCategory(this.state.idToDelete)
-      .then (() => this.closeAlert())
+      .then(() => this.closeAlert())
       .catch((e) => {
         console.log(e);
         this.closeAlert();
@@ -124,7 +105,7 @@ class CategoryList extends Component {
     const page = new URLSearchParams(search).get("page");
 
     const { categories } = this.props;
-    // console.log(categories)
+    // conosle.log(categories)
 
     return (
       <div>
@@ -134,81 +115,51 @@ class CategoryList extends Component {
           </Col>
         </Row>
         <Container>
-            <>
-              <Row className="mb-3">
-                <Col>
-                  <Button variant="primary"><span>There are {categories.length} categories</span> </Button>
-                </Col>
-                <Col></Col><Col></Col>
-                <Col>
-                  {/* <Button variant="primary"><span><CountDown hoursMinsSecs={hoursMinsSecs} /> </span> </Button> */}
-                </Col>
-              </Row>
-              <Row>
-                {categories && categories.slice(
-                  pageSize * (page - 1),
-                  pageSize * (page - 1) + pageSize
-                ).map((category, index) => (
-                  <>
-                    <Col style={{ marginTop: "30px", minWidth: "400px", maxWidth: "400px" }}><span>No. {index + 1}: {category.name}{' '}</span>
+          <>
+            <Row className="mb-3">
+              <Col>
+                <Button variant="primary"><span>There are {categories.length} categories</span> </Button>
+              </Col>
+              <Col></Col><Col></Col>
+              <Col>
+              </Col>
+            </Row>
+            <Row>
+              {categories && categories.slice(
+                pageSize * (page - 1),
+                pageSize * (page - 1) + pageSize
+              ).map((category, index) => (
+                <>
+                  <Col style={{ marginTop: "30px", minWidth: "400px", maxWidth: "400px" }}><span>No. {index + 1}: {category.name}{' '}</span>
 
-                      <Button onClick={() => this.props.history.push("/Categoris/edit/" + category._id)} variant="outline-warning">Edit</Button>{' '}
-                      <Button onClick={() => this.triggerAlert(category._id)} variant="outline-danger">Delete</Button>{' '}
-                    </Col>
-                  </>
-                ))}
-              </Row>
-              <SweetAlert
-                      warning
-                      showCancel
-                      confirmBtnText="Yes, delete it!"
-                      confirmBtnBsStyle="danger"
-                      title="Are you sure?"
-                      onConfirm={() => this.removeCategory()}
-                      onCancel={this.closeAlert}
-                      focusCancelBtn
-                      show={show} 
-                    >
-                      You will not be able to recover this question!
-                    </SweetAlert>
-              {/* <Alert show={show} variant="success">
-        <Alert.Heading>Caution!!</Alert.Heading>
-        <p>
-          Do you want to delete selected question ?
-        </p>
-        <hr />
-        <div className="d-flex justify-content-end">
-          <Button onClick={} variant="outline-success">
-            No take me back
-          </Button>
-          <Button onClick={} variant="outline-danger">
-            Delete
-          </Button>
-
-        </div>
-      </Alert> */}
-
-              {/* <Row>
-              {questions && questions.map((question, index) => (
-                <Col key={index}><span>No. {index+1}: {' '}</span>{question.description}
-                    {question.alternatives.map((answerOption, index) => (
-                      <ListGroup className="options" key={index}>
-                        <ListGroup.Item onClick={() => this.handleAnswerOptionClick(answerOption.isCorrect)}>
-                          {answerOption.text}
-                        </ListGroup.Item>
-                      </ListGroup>
-                    ))}
-                </Col>
+                    <Button onClick={() => this.props.history.push("/Categoris/edit/" + category._id)} variant="outline-warning">Edit</Button>{' '}
+                    <Button onClick={() => this.triggerAlert(category._id)} variant="outline-danger">Delete</Button>{' '}
+                  </Col>
+                </>
               ))}
-            </Row> */}
-            </>
+            </Row>
+            <SweetAlert
+              warning
+              showCancel
+              confirmBtnText="Yes, delete it!"
+              confirmBtnBsStyle="danger"
+              title="Are you sure?"
+              onConfirm={() => this.removeCategory()}
+              onCancel={this.closeAlert}
+              focusCancelBtn
+              show={show}
+            >
+              You will not be able to recover this question!
+            </SweetAlert>
+
+          </>
           <div className="mt-5 d-flex justify-content-center">
             <Pagination bsSize="medium">
-              <Pagination.First />
-              <Pagination.Prev />
-              {this.state.items}
-              <Pagination.Next />
-              <Pagination.Last />
+              <Pagination.First id={`firstPage${this.state.total}`} onClick={() => this.props.history.push({ search: `?page=${1}` })} />
+              <Pagination.Prev onClick={() => page != 1 && this.props.history.push({ search: `?page=${parseInt(page) - 1}` })} />
+              <PaginationComp total={this.state.total} num={parseInt(page)} history={this.props.history} />
+              <Pagination.Next onClick={() => page != this.state.total && this.props.history.push({ search: `?page=${parseInt(page) + 1}` })} />
+              <Pagination.Last onClick={() => this.props.history.push({ search: `?page=${this.state.total}` })} />
             </Pagination>
           </div>
         </Container>

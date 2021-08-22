@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { retrieveTest, deleteAllTest, deleteTest } from "../actions/tests";
 import { Container, Row, Col, Button, Badge, Pagination } from 'react-bootstrap';
 import SweetAlert from 'react-bootstrap-sweetalert';
+import PaginationComp from "./partials/pagination.component";
 
 class TestList extends Component {
   constructor(props) {
@@ -12,7 +13,7 @@ class TestList extends Component {
     this.triggerAlert = this.triggerAlert.bind(this);
     this.closeAlert = this.closeAlert.bind(this);
     this.mapCategoryIdToName = this.mapCategoryIdToName.bind(this);
-    
+
     this.state = {
       currentQuestion: 0,
       currentIndex: -1,
@@ -24,17 +25,14 @@ class TestList extends Component {
       total: 0,
       questionAnswers: [],
       items: [],
-      idToDelete:0,
+      idToDelete: 0,
     };
   }
-  mapCategoryIdToName (id) {
-    console.log("1wwss " + id)
-    // console.log("1ss " + this.props.categories)
+  mapCategoryIdToName(id) {
     let name = "";
-    if(this.props.categories){
+    if (this.props.categories) {
       this.props.categories.map(category => {
-        console.log("1ss " + category._id)
-        if(category._id === id) {
+        if (category._id === id) {
           name = category.name;
         }
       });
@@ -51,24 +49,7 @@ class TestList extends Component {
     this.props.retrieveTest()
       .then(() => {
 
-        // pagination items
-        let items = [];
-        // init pagination
-        // get total pages
-        let total = Math.ceil(this.props.tests.length / 10);
-        for (let number = 1; number <= total; number++) {
-          items.push(
-            <Pagination.Item onClick={() => {
-              this.props.history.push({
-                search: `?page=${number}`
-              });
-            }}
-              active={number === 1}>{number}</Pagination.Item>
-          );
-        }
-        this.setState({
-          items
-        });
+        this.setState({ total: Math.ceil(this.props.tests.length / 10) })
       })
       .catch(err => {
         console.error(err);
@@ -95,7 +76,7 @@ class TestList extends Component {
   }
 
   triggerAlert(id) {
-    this.setState({ show: true, idToDelete: id});    
+    this.setState({ show: true, idToDelete: id });
   }
 
   closeAlert() {
@@ -105,7 +86,7 @@ class TestList extends Component {
   removeTest() {
     this.props
       .deleteTest(this.state.idToDelete)
-      .then (() => this.closeAlert())
+      .then(() => this.closeAlert())
       .catch((e) => {
         console.log(e);
         this.closeAlert();
@@ -128,54 +109,54 @@ class TestList extends Component {
           </Col>
         </Row>
         <Container>
-            <>
-              <Row className="mb-3">
-                <Col>
-                  <Button variant="primary"><span>There are {tests.length} tests</span> </Button>
-                </Col>
-                <Col></Col><Col></Col>
-                <Col>
-                  {/* <Button variant="primary"><span><CountDown hoursMinsSecs={hoursMinsSecs} /> </span> </Button> */}
-                </Col>
-              </Row>
-              <Row>
-                {tests && tests.slice(
-                  pageSize * (page - 1),
-                  pageSize * (page - 1) + pageSize
-                ).map((Test, index) => (
-                  <>
-                    <Col style={{ marginTop: "30px", minWidth: "400px", maxWidth: "400px" }}><span>No. {index + 1}: {Test.name}{' '}
+          <>
+            <Row className="mb-3">
+              <Col>
+                <Button variant="primary"><span>There are {tests.length} tests</span> </Button>
+              </Col>
+              <Col></Col><Col></Col>
+              <Col>
+                {/* <Button variant="primary"><span><CountDown hoursMinsSecs={hoursMinsSecs} /> </span> </Button> */}
+              </Col>
+            </Row>
+            <Row>
+              {tests && tests.slice(
+                pageSize * (page - 1),
+                pageSize * (page - 1) + pageSize
+              ).map((Test, index) => (
+                <>
+                  <Col style={{ marginTop: "30px", minWidth: "400px", maxWidth: "400px" }}><span>No. {index + 1}: {Test.name}{' '}
                     <Badge className="m-2" bg="secondary">{this.mapCategoryIdToName(Test.category)}</Badge>
-                    </span>
-                    <br/>
+                  </span>
+                    <br />
 
-                      <Button onClick={() => this.props.history.push("/test/edit/" + Test._id)} variant="outline-warning">Edit</Button>{' '}
-                      <Button onClick={() => this.triggerAlert(Test._id)} variant="outline-danger">Delete</Button>{' '}
-                    </Col>
-                  </>
-                ))}
-              </Row>
-              <SweetAlert
-                      warning
-                      showCancel
-                      confirmBtnText="Yes, delete it!"
-                      confirmBtnBsStyle="danger"
-                      title="Are you sure?"
-                      onConfirm={() => this.removeTest()}
-                      onCancel={this.closeAlert}
-                      focusCancelBtn
-                      show={show} 
-                    >
-                      You will not be able to recover this question!
-                    </SweetAlert>
-            </>
+                    <Button onClick={() => this.props.history.push("/test/edit/" + Test._id)} variant="outline-warning">Edit</Button>{' '}
+                    <Button onClick={() => this.triggerAlert(Test._id)} variant="outline-danger">Delete</Button>{' '}
+                  </Col>
+                </>
+              ))}
+            </Row>
+            <SweetAlert
+              warning
+              showCancel
+              confirmBtnText="Yes, delete it!"
+              confirmBtnBsStyle="danger"
+              title="Are you sure?"
+              onConfirm={() => this.removeTest()}
+              onCancel={this.closeAlert}
+              focusCancelBtn
+              show={show}
+            >
+              You will not be able to recover this question!
+            </SweetAlert>
+          </>
           <div className="mt-5 d-flex justify-content-center">
             <Pagination bsSize="medium">
-              <Pagination.First />
-              <Pagination.Prev />
-              {this.state.items}
-              <Pagination.Next />
-              <Pagination.Last />
+              <Pagination.First id={`firstPage${this.state.total}`} onClick={() => this.props.history.push({ search: `?page=${1}` })} />
+              <Pagination.Prev onClick={() => page != 1 && this.props.history.push({ search: `?page=${parseInt(page) - 1}` })} />
+              <PaginationComp total={this.state.total} num={parseInt(page)} history={this.props.history} />
+              <Pagination.Next onClick={() => page != this.state.total && this.props.history.push({ search: `?page=${parseInt(page) + 1}` })} />
+              <Pagination.Last onClick={() => this.props.history.push({ search: `?page=${this.state.total}` })} />
             </Pagination>
           </div>
         </Container>

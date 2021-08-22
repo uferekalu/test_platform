@@ -39,13 +39,11 @@ class TestTab extends Component {
   }
 
   componentDidMount() {
-    console.log(this.props.auth)
-    console.log(this.props.auth.user.attempt)
     
-    let currentAssignedTest = this.props.auth.user.currentAssignedTest ? this.props.auth.user.currentAssignedTest : localStorage.getItem('currentAssignedTest');
+    let currentAssignedTest = this.props.auth.user && 'currentAssignedTest' in this.props.auth.user ? this.props.auth.user.currentAssignedTest : localStorage.getItem('currentAssignedTest');
     localStorage.setItem('currentAssignedTest', currentAssignedTest);
 
-    if (!currentAssignedTest) {
+    if (!currentAssignedTest || currentAssignedTest.length === 0) {
       this.setState({ notAssigned: true })
     }
     else {
@@ -59,7 +57,6 @@ class TestTab extends Component {
           this.setState({ questionAnswers: answerAr });
           // this.setState({ questions: questionList });
           this.props.userUpdateQuestion(response.data.questions);
-          localStorage.setItem('currentAssignedTest', currentAssignedTest);
           localStorage.setItem('passPercentage', response.data.passPercentage);
           localStorage.setItem('attempt', this.props.auth.user.attempt);
           if (localStorage.getItem("questionNumber") && localStorage.getItem("questionNumber") === response.data.questions.length) {
@@ -67,6 +64,13 @@ class TestTab extends Component {
           }    
         })
     }
+  }
+
+  componentWillUnmount() {
+    // console.log("inside222 " + localStorage.getItem("startTest"));
+    let startTest = localStorage.getItem("startTest");
+    if(startTest === "true")
+      this.props.history.push("/test")
   }
 
   refreshData() {
@@ -182,6 +186,8 @@ class TestTab extends Component {
       answers: this.state.answerAr,
       passPercentage: localStorage.getItem('passPercentage'), 
       attempt: parseInt(localStorage.getItem('attempt')) + 1, });
+
+      localStorage.setItem("startTest", "false");
       // add attempts
     }
     localStorage.setItem("answerAr", JSON.stringify(this.state.answerAr));

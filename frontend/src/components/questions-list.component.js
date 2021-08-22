@@ -2,8 +2,9 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { retrieveQuestions, deleteAllQuestions, deleteQuestion } from "../actions/questions";
 import { retrieveCategory } from "../actions/categories";
-import { Container, Row, Col, Button, Badge, ListGroup, Pagination} from 'react-bootstrap';
+import { Container, Row, Col, Button, Badge, ListGroup, Pagination } from 'react-bootstrap';
 import SweetAlert from 'react-bootstrap-sweetalert';
+import PaginationComp from "./partials/pagination.component";
 
 class QuestionsList extends Component {
   constructor(props) {
@@ -25,12 +26,11 @@ class QuestionsList extends Component {
       total: 0,
       questionAnswers: [],
       items: [],
-      idToDelete:0,
+      idToDelete: 0,
     };
   }
 
   componentDidMount() {
-    console.log(this.props)
     this.props.history.push({
       search: '?page=1'
     });
@@ -44,27 +44,8 @@ class QuestionsList extends Component {
         this.props.questions.map(qustion => {
           answerAr.push({ id: qustion._id, choosen: -1 })
         });
-        console.log(answerAr)
-
         this.setState({ questionAnswers: answerAr })
-        // pagination items
-        let items = [];
-        // init pagination
-        // get total pages
-        let total = Math.ceil(this.props.questions.length / 10);
-        for (let number = 1; number <= total; number++) {
-          items.push(
-            <Pagination.Item onClick={() => {
-              this.props.history.push({
-                search: `?page=${number}`
-              });
-            }}
-              active={number === 1}>{number}</Pagination.Item>
-          );
-        }
-        this.setState({
-          items
-        });
+        this.setState({ total: Math.ceil(this.props.questions.length / 10) })
       })
       .catch(err => {
         console.error(err.getMessage());
@@ -78,14 +59,11 @@ class QuestionsList extends Component {
     });
   }
 
-  mapCategoryIdToName (id) {
-    console.log("1wwss " + id)
-    // console.log("1ss " + this.props.categories)
+  mapCategoryIdToName(id) {
     let name = "";
-    if(this.props.categories){
+    if (this.props.categories) {
       this.props.categories.map(category => {
-        console.log("1ss " + category._id)
-        if(category._id === id) {
+        if (category._id === id) {
           name = category.name;
         }
       });
@@ -102,12 +80,10 @@ class QuestionsList extends Component {
 
     let objIndex = this.state.questionAnswers.findIndex(obj => obj.id === id);
     let quesArr = this.state.questionAnswers;
-    console.log(id + "  " + JSON.stringify(this.state.questionAnswers))
     quesArr[objIndex].choosen = index;
     this.setState({
       questionAnswers: quesArr
     });
-    console.log(id + "  " + JSON.stringify(quesArr))
   }
 
   setActiveQuestion(question, index) {
@@ -121,7 +97,6 @@ class QuestionsList extends Component {
     this.props
       .deleteAllQuestions()
       .then((response) => {
-        console.log(response);
         this.refreshData();
       })
       .catch((e) => {
@@ -130,7 +105,7 @@ class QuestionsList extends Component {
   }
 
   triggerAlert(id) {
-    this.setState({ show: true, idToDelete: id});    
+    this.setState({ show: true, idToDelete: id });
   }
 
   closeAlert() {
@@ -140,7 +115,7 @@ class QuestionsList extends Component {
   removeQuestion() {
     this.props
       .deleteQuestion(this.state.idToDelete)
-      .then (() => this.closeAlert())
+      .then(() => this.closeAlert())
       .catch((e) => {
         console.log(e);
         this.closeAlert();
@@ -154,7 +129,6 @@ class QuestionsList extends Component {
     const page = new URLSearchParams(search).get("page");
 
     const { questions } = this.props;
-    // console.log(questions)
 
     return (
       <div>
@@ -187,8 +161,8 @@ class QuestionsList extends Component {
                 ).map((question, index) => (
                   <>
                     <Col style={{ marginTop: "30px", minWidth: "400px", maxWidth: "400px" }}><span>No. {index + 1}: {question.description}{' '}</span>
-                    <br/>
-                    <Badge className="m-2" bg="secondary">{this.mapCategoryIdToName(question.category)}</Badge>
+                      <br />
+                      <Badge className="m-2" bg="secondary">{this.mapCategoryIdToName(question.category)}</Badge>
                       {question.alternatives.map((answerOption, index) => (
                         <ListGroup className="mb-1">
                           <ListGroup.Item action active={this.state.questionAnswers.length > 0 && this.state.questionAnswers[this.state.questionAnswers.findIndex(obj => obj.id === question._id)].choosen === index} onClick={() => this.handleAnswerOptionClick(answerOption.isCorrect, question._id, index)}>
@@ -203,57 +177,27 @@ class QuestionsList extends Component {
                 ))}
               </Row>
               <SweetAlert
-                      warning
-                      showCancel
-                      confirmBtnText="Yes, delete it!"
-                      confirmBtnBsStyle="danger"
-                      title="Are you sure?"
-                      onConfirm={() => this.removeQuestion()}
-                      onCancel={this.closeAlert}
-                      focusCancelBtn
-                      show={show} 
-                    >
-                      You will not be able to recover this question!
-                    </SweetAlert>
-              {/* <Alert show={show} variant="success">
-        <Alert.Heading>Caution!!</Alert.Heading>
-        <p>
-          Do you want to delete selected question ?
-        </p>
-        <hr />
-        <div className="d-flex justify-content-end">
-          <Button onClick={} variant="outline-success">
-            No take me back
-          </Button>
-          <Button onClick={} variant="outline-danger">
-            Delete
-          </Button>
-
-        </div>
-      </Alert> */}
-
-              {/* <Row>
-              {questions && questions.map((question, index) => (
-                <Col key={index}><span>No. {index+1}: {' '}</span>{question.description}
-                    {question.alternatives.map((answerOption, index) => (
-                      <ListGroup className="options" key={index}>
-                        <ListGroup.Item onClick={() => this.handleAnswerOptionClick(answerOption.isCorrect)}>
-                          {answerOption.text}
-                        </ListGroup.Item>
-                      </ListGroup>
-                    ))}
-                </Col>
-              ))}
-            </Row> */}
+                warning
+                showCancel
+                confirmBtnText="Yes, delete it!"
+                confirmBtnBsStyle="danger"
+                title="Are you sure?"
+                onConfirm={() => this.removeQuestion()}
+                onCancel={this.closeAlert}
+                focusCancelBtn
+                show={show}
+              >
+                You will not be able to recover this question!
+              </SweetAlert>
             </>
           )}
           <div className="mt-5 d-flex justify-content-center">
             <Pagination bsSize="medium">
-              <Pagination.First />
-              <Pagination.Prev />
-              {this.state.items}
-              <Pagination.Next />
-              <Pagination.Last />
+              <Pagination.First id={`firstPage${this.state.total}`} onClick={() => this.props.history.push({ search: `?page=${1}` })} />
+              <Pagination.Prev onClick={() => page != 1 && this.props.history.push({ search: `?page=${parseInt(page) - 1}` })} />
+              <PaginationComp total={this.state.total} num={parseInt(page)} history={this.props.history} />
+              <Pagination.Next onClick={() => page != this.state.total && this.props.history.push({ search: `?page=${parseInt(page) + 1}` })} />
+              <Pagination.Last onClick={() => this.props.history.push({ search: `?page=${this.state.total}` })} />
             </Pagination>
           </div>
         </Container>
