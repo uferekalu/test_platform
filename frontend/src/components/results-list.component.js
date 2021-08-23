@@ -37,7 +37,7 @@ class ResultsList extends Component {
 
         this.props.retrieveResult()
             .then(() => {
-                this.setState({ total: Math.ceil(this.props.categories.length / 10) });
+                this.setState({ total: Math.ceil(this.props.results.length / 10) });
             })
             .catch(err => {
                 console.error(err);
