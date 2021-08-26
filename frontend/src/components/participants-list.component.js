@@ -141,7 +141,7 @@ class ParticipantList extends Component {
             <>
                 <Row className="justify-content-md-center">
                     <Col xs="auto">
-                        <h4>All participants</h4>
+                        <h4 className="welcome">All participants</h4>
                     </Col>
                 </Row>
                 {this.state.participants.map((participant, index) => (
@@ -149,10 +149,10 @@ class ParticipantList extends Component {
                         <>
                             <Form onSubmit={this.saveTest}>
                                 <Row className="mb-2 mw-50 g-2 center-text">
-                                <Col className="m-3" md>
+                                <Col className="m-3 participant" md>
                                     Name: {participant.name}
                                     </Col>
-                                    <Col className="" md>
+                                    <Col className="participant" md>
                                     Assigned Test: 
                                         <Form.Select value={this.state.eachParticapantsTest[index]} onChange={(e) => this.handleSelectorChange(e, index, participant._id)} aria-label="Default select example">
                                             <option>select test</option>

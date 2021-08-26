@@ -124,7 +124,7 @@ class TestList extends Component {
       <div>
         <Row className="justify-content-md-center">
           <Col md="auto mb-4">
-            <h4>Edit and delete Tests</h4>
+            <h4 className="testrelated">Edit and delete Tests</h4>
           </Col>
         </Row>
         <Container>
@@ -144,13 +144,13 @@ class TestList extends Component {
                   pageSize * (page - 1) + pageSize
                 ).map((Test, index) => (
                   <>
-                    <Col style={{ marginTop: "30px", minWidth: "400px", maxWidth: "400px" }}><span>No. {index + 1}: {Test.name}{' '}
+                    <Col style={{ marginTop: "30px", minWidth: "400px", maxWidth: "400px" }}><span className="testrelated">No. {index + 1}: {Test.name}{' '}
                     <Badge className="m-2" bg="secondary">{this.mapCategoryIdToName(Test.category)}</Badge>
                     </span>
                     <br/>
 
-                      <Button onClick={() => this.props.history.push("/test/edit/" + Test._id)} variant="outline-warning">Edit</Button>{' '}
-                      <Button onClick={() => this.triggerAlert(Test._id)} variant="outline-danger">Delete</Button>{' '}
+                      <Button onClick={() => this.props.history.push("/test/edit/" + Test._id)} variant="warning">Edit</Button>{' '}
+                      <Button onClick={() => this.triggerAlert(Test._id)} variant="danger">Delete</Button>{' '}
                     </Col>
                   </>
                 ))}

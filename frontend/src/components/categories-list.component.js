@@ -130,7 +130,7 @@ class CategoryList extends Component {
       <div>
         <Row className="justify-content-md-center">
           <Col md="auto mb-4">
-            <h4>Edit and delete Categories</h4>
+            <h4 className="category">Edit and delete Categories</h4>
           </Col>
         </Row>
         <Container>
@@ -150,10 +150,10 @@ class CategoryList extends Component {
                   pageSize * (page - 1) + pageSize
                 ).map((category, index) => (
                   <>
-                    <Col style={{ marginTop: "30px", minWidth: "400px", maxWidth: "400px" }}><span>No. {index + 1}: {category.name}{' '}</span>
+                    <Col style={{ marginTop: "30px", minWidth: "400px", maxWidth: "400px" }}><span className="category">No. {index + 1}: {category.name}{' '}</span>
 
-                      <Button onClick={() => this.props.history.push("/Categoris/edit/" + category._id)} variant="outline-warning">Edit</Button>{' '}
-                      <Button onClick={() => this.triggerAlert(category._id)} variant="outline-danger">Delete</Button>{' '}
+                      <Button onClick={() => this.props.history.push("/Categoris/edit/" + category._id)} variant="warning">Edit</Button>{' '}
+                      <Button onClick={() => this.triggerAlert(category._id)} variant="danger">Delete</Button>{' '}
                     </Col>
                   </>
                 ))}

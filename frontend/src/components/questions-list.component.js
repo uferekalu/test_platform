@@ -160,7 +160,7 @@ class QuestionsList extends Component {
       <div>
         <Row className="justify-content-md-center">
           <Col md="auto mb-4">
-            <h4>Edit and delete Questions</h4>
+            <h4 className="question">Edit and delete Questions</h4>
           </Col>
         </Row>
         <Container>
@@ -186,7 +186,7 @@ class QuestionsList extends Component {
                   pageSize * (page - 1) + pageSize
                 ).map((question, index) => (
                   <>
-                    <Col style={{ marginTop: "30px", minWidth: "400px", maxWidth: "400px" }}><span>No. {index + 1}: {question.description}{' '}</span>
+                    <Col style={{ marginTop: "30px", minWidth: "400px", maxWidth: "400px" }}><span className="question">No. {index + 1}: {question.description}{' '}</span>
                     <br/>
                     <Badge className="m-2" bg="secondary">{this.mapCategoryIdToName(question.category)}</Badge>
                       {question.alternatives.map((answerOption, index) => (
@@ -196,8 +196,8 @@ class QuestionsList extends Component {
                           </ListGroup.Item>
                         </ListGroup>
                       ))}
-                      <Button onClick={() => this.props.history.push("/question/edit/" + question._id)} variant="outline-warning">Edit</Button>{' '}
-                      <Button onClick={() => this.triggerAlert(question._id)} variant="outline-danger">Delete</Button>{' '}
+                      <Button onClick={() => this.props.history.push("/question/edit/" + question._id)} variant="warning">Edit</Button>{' '}
+                      <Button onClick={() => this.triggerAlert(question._id)} variant="danger">Delete</Button>{' '}
                     </Col>
                   </>
                 ))}

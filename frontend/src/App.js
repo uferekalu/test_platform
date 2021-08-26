@@ -1,7 +1,15 @@
 import React, { Component } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-import { Container, Nav, NavDropdown, Navbar, Button } from "react-bootstrap";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import {
+  Container,
+  Nav,
+  NavDropdown,
+  Navbar,
+  Button,
+  Form,
+  FormControl
+} from "react-bootstrap";
 import { connect } from "react-redux";
 import jwt_decode from "jwt-decode";
 import setAuthToken from "./utils/setAuthToken";
@@ -50,14 +58,96 @@ if (localStorage.jwtToken) {
 }
 
 class App extends Component {
-  onLogoutClick = e => {
+  onLogoutClick = (e) => {
     e.preventDefault();
     this.props.logoutUser();
   };
   render() {
     return (
       <Router>
-        <nav className="navbar px-5 navbar-expand navbar-dark bg-dark">
+        <Navbar bg="light" expand="lg">
+          <Container>
+            <Navbar.Brand href="/">Exam Platform</Navbar.Brand>
+            <Navbar.Toggle aria-controls="basic-navbar-nav" />
+            <Navbar.Collapse id="basic-navbar-nav">
+              <Nav className="me-auto white" style={{ color: "white" }}>
+                {this.props.auth.isAuthenticated && (
+                  <Nav.Link
+                    href="/test"
+                    onClick={() => {
+                      localStorage.setItem("questionNumber", "1");
+                      localStorage.setItem("answerAr", "");
+                      localStorage.setItem("hours", "0");
+                      localStorage.setItem("minutes", "0");
+                      localStorage.setItem("seconds", "30");
+                    }}
+                  >
+                    Take Test
+                  </Nav.Link>
+                )}
+                {this.props.auth.isAuthenticated &&
+                  this.props.auth.user.isAdmin === true && (
+                    <>
+                      <NavDropdown title="Results" id="basic-nav-dropdown">
+                        <NavDropdown.Item href="/participants">
+                          All Participants
+                        </NavDropdown.Item>
+                        <NavDropdown.Item href="/results">
+                          Results List
+                        </NavDropdown.Item>
+                      </NavDropdown>
+                      <NavDropdown title="Add" id="basic-nav-dropdown">
+                        <NavDropdown.Item href="/add">
+                          Add Question
+                        </NavDropdown.Item>
+                        <NavDropdown.Item href="/Category/add">
+                          Add Category
+                        </NavDropdown.Item>
+                        <NavDropdown.Item href="/test/add">
+                          Add Test
+                        </NavDropdown.Item>
+                      </NavDropdown>
+                      <NavDropdown title="Edit/Delete" id="basic-nav-dropdown">
+                        <NavDropdown.Item href="/questions">
+                          Question list
+                        </NavDropdown.Item>
+                        <NavDropdown.Item href="/Categoris">
+                          Category list
+                        </NavDropdown.Item>
+                        <NavDropdown.Item href="/tests">
+                          Test list
+                        </NavDropdown.Item>
+                      </NavDropdown>
+                    </>
+                  )}
+              </Nav>
+              <>
+                {this.props.auth.isAuthenticated &&
+                  this.props.auth.user.isAdmin === true && (
+                    <Form className="d-flex">
+                      <FormControl
+                        type="search"
+                        placeholder="Search"
+                        className="mr-2"
+                        aria-label="Search"
+                      />
+                      <Button variant="outline-success">Search</Button>
+                    </Form>
+                  )}
+                {this.props.auth.isAuthenticated && (
+                  <Button
+                    variant="primary"
+                    onClick={this.onLogoutClick}
+                    style={{ marginLeft: "15px" }}
+                  >
+                    Logout
+                  </Button>
+                )}
+              </>
+            </Navbar.Collapse>
+          </Container>
+        </Navbar>
+        {/* <nav className="navbar px-5 navbar-expand navbar-dark bg-dark">
           <Link to={"/"} className="navbar-brand">
             Exam Platform
           </Link>
@@ -163,45 +253,42 @@ class App extends Component {
               Logout
             </Button>
           )}
-        </nav>
+        </nav> */}
 
         <Container className="mt-3">
           <Switch>
-            {/* {this.props.auth.isAuthenticated &&
-              this.props.auth.user.isAdmin === true && (
-                <>
-                  <Route exact path="/" component={Home} />
-                  <Route exact path="/add" component={AddQuestion} />
-                  <Route
-                    exact
-                    path="/question/edit/:id"
-                    component={AddQuestion}
-                  />
-                  <Route path="/question/:id" component={Question} />
-                  <Route path="/Category/add" component={CategoryCreat} />
-                  <Route exact path="/Categoris" component={CategoryList} />
-                  <Route path="/Categoris/edit/:id" component={CategoryCreat} />
-                  <PrivateRoute path="/test" component={TestTab} />
-                  <PrivateRoute exact path="/questions" component={QuestionsList} />
-                  <PrivateRoute exact path="/dashboard" component={Dashboard} />
-                </>
-              )} */}
             <Route exact path="/" component={Home} />
             <PrivateRoute exact path="/questions" component={QuestionsList} />
             <PrivateRoute exact path="/test" component={TestTab} />
             <PrivateRoute exact path="/add" component={AddQuestion} />
-            <PrivateRoute exact path="/question/edit/:id" component={AddQuestion} />
+            <PrivateRoute
+              exact
+              path="/question/edit/:id"
+              component={AddQuestion}
+            />
             <PrivateRoute exact path="/test/edit/:id" component={TestCreat} />
             <PrivateRoute exact path="/question/:id" component={Question} />
             <Route path="/register" component={Register} />
             <Route path="/login" component={Login} />
             <PrivateRoute path="/instruction" component={Instruction} />
-            <PrivateRoute exact path="/Category/add" component={CategoryCreat} />
+            <PrivateRoute
+              exact
+              path="/Category/add"
+              component={CategoryCreat}
+            />
             <PrivateRoute exact path="/test/add" component={TestCreat} />
             <PrivateRoute exact path="/tests" component={TestsList} />
             <PrivateRoute exact path="/Categoris" component={CategoryList} />
-            <PrivateRoute exact path="/Categoris/edit/:id" component={CategoryCreat} />
-            <PrivateRoute exact path="/participants" component={ParticipantsList} />
+            <PrivateRoute
+              exact
+              path="/Categoris/edit/:id"
+              component={CategoryCreat}
+            />
+            <PrivateRoute
+              exact
+              path="/participants"
+              component={ParticipantsList}
+            />
             <PrivateRoute exact path="/results" component={ResultsList} />
             <PrivateRoute exact path="/results/:id" component={Results} />
             <PrivateRoute exact path="/dashboard" component={Dashboard} />
@@ -215,12 +302,12 @@ class App extends Component {
 App.propTypes = {
   loginUser: PropTypes.func.isRequired,
   logoutUser: PropTypes.func.isRequired,
-  auth: PropTypes.object.isRequired,
+  auth: PropTypes.object.isRequired
 };
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
-  errors: state.errors,
+  errors: state.errors
 });
 
 export default connect(mapStateToProps, { loginUser, logoutUser })(App);

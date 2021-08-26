@@ -73,7 +73,7 @@ class Login extends Component {
             <Row>
                 <Col>
                     <Col className="mb-4">
-                        <p className="grey-text text-darken-1">
+                        <p className="noaccount">
                             Don't have an account? {' '}
                             <Button variant="primary">
                                 <Link className="account-button-link " to="/register">Register</Link>
@@ -83,7 +83,7 @@ class Login extends Component {
                 </Col>
                 <Form onSubmit={this.onSubmit}>
                     <Form.Group as={Row} className="mb-3">
-                        <Form.Label column sm="2">
+                        <Form.Label column sm="2" className="noaccount">
                             Email
                         </Form.Label>
                         <Col sm="10">
@@ -98,14 +98,14 @@ class Login extends Component {
                                     invalid: errors.email || errors.emailnotfound
                                 })}
                             />
-                            <span style={{color:"red"}}>
+                            <span style={{color:"red", backgroundColor:"white"}}>
                                 {errors.email}
                                 {errors.emailnotfound}
                             </span>
                         </Col>
                     </Form.Group>
                     <Form.Group as={Row} className="mb-3">
-                        <Form.Label column sm="2">
+                        <Form.Label column sm="2" className="noaccount">
                             Password
                         </Form.Label>
                         <Col sm="10">
@@ -120,7 +120,7 @@ class Login extends Component {
                                     invalid: errors.password || errors.passwordincorrect
                                 })}
                             />
-                            <span style={{color:"red"}}>
+                            <span style={{color:"red", backgroundColor:"white"}}>
                                 {errors.password}
                                 {errors.passwordincorrect}
                             </span>

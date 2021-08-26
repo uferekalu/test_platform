@@ -64,7 +64,7 @@ class Register extends Component {
                 <Row>
                 <Col>
                     <Col className="mb-4">
-                        <p className="grey-text text-darken-1">
+                        <p className="grey-text text-darken-1 noaccount">
                             Already have an account? {' '}
                             <Button variant="primary">
                                 <Link className="account-button-link " to="/login">Login</Link>
@@ -75,7 +75,7 @@ class Register extends Component {
                 </Row>
                     <Form onSubmit={this.onSubmit}>
                         <Form.Group as={Row} className="mb-3">
-                            <Form.Label column sm="2">
+                            <Form.Label column sm="2" className="noaccount">
                                 Name
                             </Form.Label>
                             <Col sm="10">
@@ -90,11 +90,11 @@ class Register extends Component {
                                         invalid: errors.name
                                     })}
                                 />
-                                <span style={{color:"red"}}>{errors.name}</span>
+                                <span style={{color:"red", backgroundColor:"white"}}>{errors.name}</span>
                             </Col>
                         </Form.Group>
                         <Form.Group as={Row} className="mb-3">
-                            <Form.Label column sm="2">
+                            <Form.Label column sm="2" className="noaccount">
                                 Email
                             </Form.Label>
                             <Col sm="10">
@@ -109,11 +109,11 @@ class Register extends Component {
                                         invalid: errors.email
                                     })}
                                 />
-                                <span style={{color:"red"}}>{errors.email}</span>
+                                <span style={{color:"red", backgroundColor:"white"}}>{errors.email}</span>
                             </Col>
                         </Form.Group>
                         <Form.Group as={Row} className="mb-3">
-                            <Form.Label column sm="2">
+                            <Form.Label column sm="2" className="noaccount">
                                 Password
                             </Form.Label>
                             <Col sm="10">
@@ -128,11 +128,11 @@ class Register extends Component {
                                         invalid: errors.password
                                     })}
                                 />
-                                <span style={{color:"red"}}>{errors.password}</span>
+                                <span style={{color:"red", backgroundColor:"white"}}>{errors.password}</span>
                             </Col>
                         </Form.Group>
                         <Form.Group as={Row} className="mb-3">
-                            <Form.Label column sm="2">
+                            <Form.Label column sm="2" className="noaccount">
                                 Confirm password
                             </Form.Label>
                             <Col sm="10">
@@ -147,7 +147,7 @@ class Register extends Component {
                                         invalid: errors.password2
                                     })}
                                 />
-                                <span style={{color:"red"}}>{errors.password2}</span>
+                                <span style={{color:"red", backgroundColor:"white"}}>{errors.password2}</span>
                             </Col>
                         </Form.Group>
                         <Row className="mt-5">

@@ -178,7 +178,7 @@ class AddQuestion extends Component {
       <>
         <Row className="justify-content-md-center">
           <Col xs="auto">
-            <h4>
+            <h4 className="question">
               {!this.props.history.location.pathname.includes("edit")
                 ? "Add a Question"
                 : "Edit Question"}
@@ -188,7 +188,7 @@ class AddQuestion extends Component {
         <Row className="justify-content-md-center">
           {this.state.submitted ? (
             <div>
-              <h4>You submitted successfully!</h4>
+              <h4 className="question">You submitted successfully!</h4>
               <button className="btn btn-success" onClick={this.newQuestion}>
                 Add
               </button>
@@ -197,7 +197,7 @@ class AddQuestion extends Component {
             <>
               <Form onSubmit={this.saveQuestion}>
                 <Row className="mw-50 g-2">
-                  <Col className="" md>
+                  <Col className="question" md>
                     <Form.Label>Category</Form.Label>
                     <Form.Select
                       value={this.state.category}
@@ -221,7 +221,7 @@ class AddQuestion extends Component {
                         className="mb-3"
                         controlId="exampleForm.ControlTextarea1"
                       >
-                        <Form.Label>Question</Form.Label>
+                        <Form.Label className="question">Question</Form.Label>
                         <Form.Control
                           as="textarea"
                           value={question.description}
@@ -237,7 +237,7 @@ class AddQuestion extends Component {
                       className="mb-3"
                       controlId="exampleForm.ControlTextarea1"
                     >
-                      <Form.Label>
+                      <Form.Label className="question">
                         Answer options with a checkbox for correct answer
                       </Form.Label>
                       <Form.Check
@@ -246,6 +246,7 @@ class AddQuestion extends Component {
                         type="checkbox"
                         checked={question.alternatives[0].isCorrect}
                         label="Check for correct answer"
+                        className="question"
                       />
                       <Form.Control
                         id="title"
@@ -261,6 +262,7 @@ class AddQuestion extends Component {
                         checked={question.alternatives[1].isCorrect}
                         type="checkbox"
                         label="Check for correct answer"
+                        className="question"
                       />
                       <Form.Control
                         id="title"
@@ -276,6 +278,7 @@ class AddQuestion extends Component {
                         checked={question.alternatives[2].isCorrect}
                         type="checkbox"
                         label="Check for correct answer"
+                        className="question"
                       />
                       <Form.Control
                         id="title"
@@ -291,6 +294,7 @@ class AddQuestion extends Component {
                         checked={question.alternatives[3].isCorrect}
                         type="checkbox"
                         label="Check for correct answer"
+                        className="question"
                       />
                       <Form.Control
                         id="title"
@@ -306,6 +310,7 @@ class AddQuestion extends Component {
                         checked={question.alternatives[4].isCorrect}
                         type="checkbox"
                         label="Check for correct answer"
+                        className="question"
                       />
                       <Form.Control
                         id="title"
@@ -319,7 +324,7 @@ class AddQuestion extends Component {
                   </Col>
                 </Row>
                 <div className="d-grid gap-2">
-                  <Button type="submit" variant="outline-primary">
+                  <Button type="submit" variant="primary">
                     Submit
                   </Button>
                 </div>

@@ -43,7 +43,7 @@
 }
 .welcome {
   text-align: center;
-  color: grey;
+  color: white;
 }
 .account-button .action-but{
   width: 50%;
@@ -71,10 +71,16 @@
   text-align: center;
   margin: 40px 0 20px 0;
   padding: 0 70px;
+  color: white;
 }
 .back-to-home {
+  color: white;
   text-decoration: none;
 }
 .admin-guide {
   text-align: center;
 }
+.question, .noaccount, .participant, .category, .testrelated {
+  color: white;
+}
+
