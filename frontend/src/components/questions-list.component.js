@@ -1,9 +1,21 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { retrieveQuestions, deleteAllQuestions, deleteQuestion } from "../actions/questions";
+import {
+  retrieveQuestions,
+  deleteAllQuestions,
+  deleteQuestion
+} from "../actions/questions";
 import { retrieveCategory } from "../actions/categories";
-import { Container, Row, Col, Button, Badge, ListGroup, Pagination } from 'react-bootstrap';
-import SweetAlert from 'react-bootstrap-sweetalert';
+import {
+  Container,
+  Row,
+  Col,
+  Button,
+  Badge,
+  ListGroup,
+  Pagination
+} from "react-bootstrap";
+import SweetAlert from "react-bootstrap-sweetalert";
 import PaginationComp from "./partials/pagination.component";
 
 class QuestionsList extends Component {
@@ -26,28 +38,28 @@ class QuestionsList extends Component {
       total: 0,
       questionAnswers: [],
       items: [],
-      idToDelete: 0,
+      idToDelete: 0
     };
   }
 
   componentDidMount() {
     this.props.history.push({
-      search: '?page=1'
+      search: "?page=1"
     });
 
     this.props.retrieveCategory();
-    this.props.retrieveQuestions()
+    this.props
+      .retrieveQuestions()
       .then(() => {
-
         // init ansersArr
         let answerAr = [];
-        this.props.questions.map(qustion => {
-          answerAr.push({ id: qustion._id, choosen: -1 })
+        this.props.questions.map((qustion) => {
+          answerAr.push({ id: qustion._id, choosen: -1 });
         });
-        this.setState({ questionAnswers: answerAr })
-        this.setState({ total: Math.ceil(this.props.questions.length / 10) })
+        this.setState({ questionAnswers: answerAr });
+        this.setState({ total: Math.ceil(this.props.questions.length / 10) });
       })
-      .catch(err => {
+      .catch((err) => {
         console.error(err.getMessage());
       });
   }
@@ -55,14 +67,14 @@ class QuestionsList extends Component {
   refreshData() {
     this.setState({
       currentQuestion: null,
-      currentIndex: -1,
+      currentIndex: -1
     });
   }
 
   mapCategoryIdToName(id) {
     let name = "";
     if (this.props.categories) {
-      this.props.categories.map(category => {
+      this.props.categories.map((category) => {
         if (category._id === id) {
           name = category.name;
         }
@@ -74,11 +86,11 @@ class QuestionsList extends Component {
   handleAnswerOptionClick(isCorrect, id, index) {
     if (isCorrect) {
       this.setState({
-        score: this.state.score + 1,
-      })
+        score: this.state.score + 1
+      });
     }
 
-    let objIndex = this.state.questionAnswers.findIndex(obj => obj.id === id);
+    let objIndex = this.state.questionAnswers.findIndex((obj) => obj.id === id);
     let quesArr = this.state.questionAnswers;
     quesArr[objIndex].choosen = index;
     this.setState({
@@ -89,7 +101,7 @@ class QuestionsList extends Component {
   setActiveQuestion(question, index) {
     this.setState({
       currentQuestion: question,
-      currentIndex: index,
+      currentIndex: index
     });
   }
 
@@ -140,41 +152,90 @@ class QuestionsList extends Component {
         <Container>
           {showScore ? (
             <Button variant="primary">
-              You scored <Badge bg="secondary">{score}</Badge> out of <Badge bg="secondary">{questions.length}</Badge>
+              You scored <Badge bg="secondary">{score}</Badge> out of{" "}
+              <Badge bg="secondary">{questions.length}</Badge>
               <span className="visually-hidden">unread messages</span>
             </Button>
           ) : (
             <>
               <Row className="mb-3">
                 <Col>
-                  <Button variant="primary"><span>There are {questions.length} questions</span> </Button>
+                  <Button variant="primary">
+                    <span>There are {questions.length} questions</span>{" "}
+                  </Button>
                 </Col>
-                <Col></Col><Col></Col>
+                <Col></Col>
+                <Col></Col>
                 <Col>
                   {/* <Button variant="primary"><span><CountDown hoursMinsSecs={hoursMinsSecs} /> </span> </Button> */}
                 </Col>
               </Row>
               <Row>
-                {questions && questions.slice(
-                  pageSize * (page - 1),
-                  pageSize * (page - 1) + pageSize
-                ).map((question, index) => (
-                  <>
-                    <Col style={{ marginTop: "30px", minWidth: "400px", maxWidth: "400px" }}><span>No. {index + 1}: {question.description}{' '}</span>
-                      <br />
-                      <Badge className="m-2" bg="secondary">{this.mapCategoryIdToName(question.category)}</Badge>
-                      {question.alternatives.map((answerOption, index) => (
-                        <ListGroup className="mb-1">
-                          <ListGroup.Item action active={this.state.questionAnswers.length > 0 && this.state.questionAnswers[this.state.questionAnswers.findIndex(obj => obj.id === question._id)].choosen === index} onClick={() => this.handleAnswerOptionClick(answerOption.isCorrect, question._id, index)}>
-                            {answerOption.text}
-                          </ListGroup.Item>
-                        </ListGroup>
-                      ))}
-                      <Button onClick={() => this.props.history.push("/question/edit/" + question._id)} variant="outline-warning">Edit</Button>{' '}
-                      <Button onClick={() => this.triggerAlert(question._id)} variant="outline-danger">Delete</Button>{' '}
-                    </Col>
-                  </>
-                ))}
+                {questions &&
+                  questions
+                    .slice(
+                      pageSize * (page - 1),
+                      pageSize * (page - 1) + pageSize
+                    )
+                    .map((question, index) => (
+                      <>
+                        <Col
+                          style={{
+                            marginTop: "30px",
+                            minWidth: "400px",
+                            maxWidth: "400px"
+                          }}
+                        >
+                          <span>
+                            No. {index + 1}: {question.description}{" "}
+                          </span>
+                          <br />
+                          <Badge className="m-2" bg="secondary">
+                            {this.mapCategoryIdToName(question.category)}
+                          </Badge>
+                          {question.alternatives.map((answerOption, index) => (
+                            <ListGroup className="mb-1">
+                              <ListGroup.Item
+                                action
+                                active={
+                                  this.state.questionAnswers.length > 0 &&
+                                  this.state.questionAnswers[
+                                    this.state.questionAnswers.findIndex(
+                                      (obj) => obj.id === question._id
+                                    )
+                                  ].choosen === index
+                                }
+                                onClick={() =>
+                                  this.handleAnswerOptionClick(
+                                    answerOption.isCorrect,
+                                    question._id,
+                                    index
+                                  )
+                                }
+                              >
+                                {answerOption.text}
+                              </ListGroup.Item>
+                            </ListGroup>
+                          ))}
+                          <Button
+                            onClick={() =>
+                              this.props.history.push(
+                                "/question/edit/" + question._id
+                              )
+                            }
+                            variant="outline-warning"
+                          >
+                            Edit
+                          </Button>{" "}
+                          <Button
+                            onClick={() => this.triggerAlert(question._id)}
+                            variant="outline-danger"
+                          >
+                            Delete
+                          </Button>{" "}
+                        </Col>
+                      </>
+                    ))}
               </Row>
               <SweetAlert
                 warning
@@ -193,25 +254,58 @@ class QuestionsList extends Component {
           )}
           <div className="mt-5 d-flex justify-content-center">
             <Pagination bsSize="medium">
-              <Pagination.First id={`firstPage${this.state.total}`} onClick={() => this.props.history.push({ search: `?page=${1}` })} />
-              <Pagination.Prev onClick={() => page != 1 && this.props.history.push({ search: `?page=${parseInt(page) - 1}` })} />
-              <PaginationComp total={this.state.total} num={parseInt(page)} history={this.props.history} />
-              <Pagination.Next onClick={() => page != this.state.total && this.props.history.push({ search: `?page=${parseInt(page) + 1}` })} />
-              <Pagination.Last onClick={() => this.props.history.push({ search: `?page=${this.state.total}` })} />
+              <Pagination.First
+                id={`firstPage${this.state.total}`}
+                onClick={() =>
+                  this.props.history.push({ search: `?page=${1}` })
+                }
+              />
+              <Pagination.Prev
+                onClick={() =>
+                  page !== 1 &&
+                  this.props.history.push({
+                    search: `?page=${parseInt(page) - 1}`
+                  })
+                }
+              />
+              <PaginationComp
+                total={this.state.total}
+                num={parseInt(page)}
+                history={this.props.history}
+              />
+              <Pagination.Next
+                onClick={() =>
+                  page !== this.state.total &&
+                  this.props.history.push({
+                    search: `?page=${parseInt(page) + 1}`
+                  })
+                }
+              />
+              <Pagination.Last
+                onClick={() =>
+                  this.props.history.push({
+                    search: `?page=${this.state.total}`
+                  })
+                }
+              />
             </Pagination>
           </div>
         </Container>
       </div>
-    )
+    );
   }
 }
 
 const mapStateToProps = (state) => {
   return {
     questions: state.questions,
-    categories: state.categories,
+    categories: state.categories
   };
 };
 
-
-export default connect(mapStateToProps, { retrieveQuestions, deleteAllQuestions, deleteQuestion, retrieveCategory })(QuestionsList);
+export default connect(mapStateToProps, {
+  retrieveQuestions,
+  deleteAllQuestions,
+  deleteQuestion,
+  retrieveCategory
+})(QuestionsList);

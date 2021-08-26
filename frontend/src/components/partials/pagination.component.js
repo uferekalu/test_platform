@@ -16,7 +16,7 @@ export default function PaginationComp({total, num, history}) {
                         search: `?page=${number}`
                     });
                 }}
-                    active={number == num}>{number}</Pagination.Item> 
+                    active={number === num}>{number}</Pagination.Item> 
             );
         }
         setItems(itemsTemp)

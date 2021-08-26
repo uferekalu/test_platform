@@ -159,9 +159,9 @@ class ResultsList extends Component {
                     <div className="mt-5 d-flex justify-content-center">
                         <Pagination bsSize="medium">
                             <Pagination.First id={`firstPage${this.state.total}`} onClick={() => this.props.history.push({ search: `?page=${1}` })} />
-                            <Pagination.Prev onClick={() => page != 1 && this.props.history.push({ search: `?page=${parseInt(page) - 1}` })} />
+                            <Pagination.Prev onClick={() => page !== 1 && this.props.history.push({ search: `?page=${parseInt(page) - 1}` })} />
                             <PaginationComp total={this.state.total} num={parseInt(page)} history={this.props.history} />
-                            <Pagination.Next onClick={() => page != this.state.total && this.props.history.push({ search: `?page=${parseInt(page) + 1}` })} />
+                            <Pagination.Next onClick={() => page !== this.state.total && this.props.history.push({ search: `?page=${parseInt(page) + 1}` })} />
                             <Pagination.Last onClick={() => this.props.history.push({ search: `?page=${this.state.total}` })} />
                         </Pagination>
                     </div>
