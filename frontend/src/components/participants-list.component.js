@@ -159,6 +159,7 @@ class ParticipantList extends Component {
                                             {tests.map((test) => (
                                                 <option value={test._id}>{test.name}</option>
                                             ))}
+                                            <option value="">none</option>
                                         </Form.Select>
                                     </Col>
                                 </Row>

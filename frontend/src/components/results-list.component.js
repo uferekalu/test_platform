@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { retrieveResult } from "../actions/results";
 import { Container, Row, Col, Button, Pagination } from 'react-bootstrap';
 import SweetAlert from 'react-bootstrap-sweetalert';
+import PaginationComp from "./partials/pagination.component";
 
 class ResultsList extends Component {
     constructor(props) {
@@ -36,25 +37,7 @@ class ResultsList extends Component {
 
         this.props.retrieveResult()
             .then(() => {
-
-                // pagination items
-                let items = [];
-                // init pagination
-                // get total pages
-                let total = Math.ceil(this.props.results.length / 10);
-                for (let number = 1; number <= total; number++) {
-                    items.push(
-                        <Pagination.Item onClick={() => {
-                            this.props.history.push({
-                                search: `?page=${number}`
-                            });
-                        }}
-                            active={number === 1}>{number}</Pagination.Item>
-                    );
-                }
-                this.setState({
-                    items
-                });
+                this.setState({ total: Math.ceil(this.props.results.length / 10) });
             })
             .catch(err => {
                 console.error(err);
@@ -175,11 +158,11 @@ class ResultsList extends Component {
                     </>
                     <div className="mt-5 d-flex justify-content-center">
                         <Pagination bsSize="medium">
-                            <Pagination.First />
-                            <Pagination.Prev />
-                            {this.state.items}
-                            <Pagination.Next />
-                            <Pagination.Last />
+                            <Pagination.First id={`firstPage${this.state.total}`} onClick={() => this.props.history.push({ search: `?page=${1}` })} />
+                            <Pagination.Prev onClick={() => page !== 1 && this.props.history.push({ search: `?page=${parseInt(page) - 1}` })} />
+                            <PaginationComp total={this.state.total} num={parseInt(page)} history={this.props.history} />
+                            <Pagination.Next onClick={() => page !== this.state.total && this.props.history.push({ search: `?page=${parseInt(page) + 1}` })} />
+                            <Pagination.Last onClick={() => this.props.history.push({ search: `?page=${this.state.total}` })} />
                         </Pagination>
                     </div>
                 </Container>

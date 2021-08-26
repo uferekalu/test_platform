@@ -35,6 +35,7 @@ class Instruction extends Component {
                     localStorage.setItem("hours", "0");
                     localStorage.setItem("minutes", "0");
                     localStorage.setItem("seconds", "30");
+                    localStorage.setItem("startTest", "true");
                   }}
                 >
                   Take a Test

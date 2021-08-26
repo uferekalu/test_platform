@@ -58,9 +58,12 @@ if (localStorage.jwtToken) {
 }
 
 class App extends Component {
-  onLogoutClick = (e) => {
-    e.preventDefault();
-    this.props.logoutUser();
+  onLogoutClick = e => {
+    let startTest = localStorage.getItem("startTest");
+    if(startTest !== "true") {
+      e.preventDefault();
+      this.props.logoutUser();  
+    }
   };
   render() {
     return (
@@ -152,7 +155,8 @@ class App extends Component {
             Exam Platform
           </Link>
           <div className="navbar-nav mr-auto">
-            {this.props.auth.isAuthenticated && (
+            {this.props.auth.isAuthenticated &&
+              this.props.auth.user.isAdmin !== true && (
               <li className="nav-item">
                 <Link to={"/test"} onClick={() => {
                   localStorage.setItem("questionNumber", "1");
@@ -160,6 +164,7 @@ class App extends Component {
                   localStorage.setItem("hours", "0");
                   localStorage.setItem("minutes", "0");
                   localStorage.setItem("seconds", "30");
+                  localStorage.setItem("startTest", "true");
                 }}
                   className="nav-link">
                   Take Test
