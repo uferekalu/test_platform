@@ -233,13 +233,13 @@ class AddTest extends Component {
             <>
                 <Row className="justify-content-md-center">
                     <Col xs="auto">
-                        <h4>{!this.props.history.location.pathname.includes("edit") ? "Add a Test" : "Edit Test"}</h4>
+                        <h4 className="testrelated">{!this.props.history.location.pathname.includes("edit") ? "Add a Test" : "Edit Test"}</h4>
                     </Col>
                 </Row>
                 <Row className="justify-content-md-center">
                     {this.state.submitted ? (
                         <div>
-                            <h4>You submitted successfully!</h4>
+                            <h4 className="testrelated">You submitted successfully!</h4>
                             <button className="btn btn-success" onClick={this.newQuestion}>
                                 Add
                             </button>
@@ -254,7 +254,7 @@ class AddTest extends Component {
 
                                 <Row className="mw-50 g-2">
                                     <Col className="" md>
-                                        <Form.Label>Test Name </Form.Label>
+                                        <Form.Label className="testrelated">Test Name </Form.Label>
                                         <Form.Control id="title"
                                             name="0"
                                             onChange={this.handleNameChange}
@@ -264,7 +264,7 @@ class AddTest extends Component {
                                 </Row>
                                 <Row className="mb-2 mw-50 g-2">
                                     <Col className="" md>
-                                        <Form.Label>Category</Form.Label>
+                                        <Form.Label className="testrelated">Category</Form.Label>
                                         <Form.Select value={this.state.category} onChange={this.handleSelectorChange} aria-label="Default select example">
                                             <option>select category</option>
                                             {categories.map((category) => (
@@ -275,7 +275,7 @@ class AddTest extends Component {
                                 </Row>
                                 <Row className="mw-50 g-2">
                                     <Col className="" md>
-                                        <Form.Label>Success Percentage </Form.Label>
+                                        <Form.Label className="testrelated">Success Percentage </Form.Label>
                                         <Form.Control id="title"
                                             name="0"
                                             type="number"
@@ -290,7 +290,7 @@ class AddTest extends Component {
                                     <Col md>
                                         <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                                             <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
-                                                <Form.Label>Choose Questions:</Form.Label>
+                                                <Form.Label className="testrelated">Choose Questions:</Form.Label>
                                                 {questions.length > 0 && questions.map((question, index) => (
                                                     <ListGroup className="mb-1">
                                                         <ListGroup.Item active={this.state.questionsClicked[index]} onClick={() => this.handleAnswerOptionClick(index)}>
@@ -303,7 +303,7 @@ class AddTest extends Component {
                                     </Col>
                                 </Row>
                                 <div className="d-grid gap-2">
-                                    <Button type="submit" variant="outline-primary">Submit</Button>
+                                    <Button type="submit" variant="primary">Submit</Button>
                                 </div>
                             </Form>
                         </>

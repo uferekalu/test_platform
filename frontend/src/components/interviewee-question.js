@@ -210,7 +210,7 @@ class TestTab extends Component {
             <div>
               <Row className="justify-content-md-center">
                 <Col md="auto mb-4">
-                  <h4>
+                  <h4 className="welcome">
                     {!showScore
                       ? "Instruction: You have 30 sec to solve the question and go to the next one!"
                       : "Congrats, You finished your test!"}
@@ -263,7 +263,7 @@ class TestTab extends Component {
                               maxWidth: "700px",
                             }}
                           >
-                            <span>
+                            <span className="question mb-3">
                               No. {count}:{" "}
                               {questions.length > 0
                                 ? questions[count - 1].description

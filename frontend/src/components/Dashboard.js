@@ -28,7 +28,7 @@ class Dashboard extends Component {
           </Col>
         </Row>
         <Row className="admin-guide">
-          <p className="mt-1">
+          <p className="mt-1 welcome">
             Here, you have access to the results of the participants through Results in Navbar.
             You can add, edit and delete categories, questions and tests...
           </p>

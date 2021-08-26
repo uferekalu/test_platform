@@ -123,7 +123,7 @@ class CategoryCreat extends Component {
             <div>
                 {this.state.submitted ? (
                     <div>
-                        <h4>You submitted successfully!</h4>
+                        <h4 className="category">You submitted successfully!</h4>
                         <button className="btn btn-success" onClick={this.newCategory}>
                             Add
                         </button>
@@ -131,10 +131,10 @@ class CategoryCreat extends Component {
                 ) : (
 
                     <div className="edit-form">
-                        <h4>{edit ? "Edit" : "Add"} Category</h4>
+                        <h4 className="category">{edit ? "Edit" : "Add"} Category</h4>
                         <form className="mb-3 w-50">
                             <div className="form-group">
-                                <label htmlFor="title">Name</label>
+                                <label htmlFor="title" className="category">Name</label>
                                 <input
                                     type="text"
                                     className="form-control"

@@ -128,7 +128,7 @@ class ResultsList extends Component {
 
         return (
             <div>
-                <Row className="justify-content-md-center">
+                <Row className="justify-content-md-center participant">
                     <Col md="auto mb-4">
                         <h4>Edit and delete results</h4>
                     </Col>
@@ -151,10 +151,10 @@ class ResultsList extends Component {
                             ).map((Result, index) => (
                                 <>
                                     <Col style={{ marginTop: "30px", minWidth: "400px", maxWidth: "400px" }}>
-                                        <span>{index + 1}- Participant {Result.user.name} with {Result.attempt} {Result.attempt > 1 ? 'attempts' : 'attempt' } got {Result.correctAnsweredCount} right answers in {Result.test.name} test{' '}</span>
+                                        <span className="participant">{index + 1}- Participant {Result.user.name} with {Result.attempt} {Result.attempt > 1 ? 'attempts' : 'attempt' } got {Result.correctAnsweredCount} right answers in {Result.test.name} test{' '}</span>
                                         <br/>
                                         <br/>
-                                        <Button onClick={() => this.props.history.push("/results/" + Result._id)} variant="outline-success">View Details</Button>{' '}
+                                        <Button onClick={() => this.props.history.push("/results/" + Result._id)} variant="primary">View Details</Button>{' '}
                                     </Col>
                                 </>
                             ))}
